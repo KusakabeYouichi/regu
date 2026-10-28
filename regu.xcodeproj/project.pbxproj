@@ -1,0 +1,470 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7E6A10000000000000000101 /* ReguCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E6A10000000000000000501 /* ReguCore */; };
+		7E6A10000000000000000102 /* ReguUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7E6A10000000000000000502 /* ReguUI */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7E6A10000000000000001101 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E6A10000000000000000901 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7E6A10000000000000000701;
+			remoteInfo = regu;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7E6A10000000000000000201 /* regu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = regu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E6A10000000000000001201 /* reguUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = reguUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E6A10000000000000000202 /* Edition.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Edition.xcconfig; sourceTree = "<group>"; };
+		7E6A10000000000000000203 /* ReguKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ReguKit; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7E6A10000000000000000D01 /* Exceptions for "App" folder in "regu" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7E6A10000000000000000701 /* regu */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		7E6A10000000000000000301 /* App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7E6A10000000000000000D01 /* Exceptions for "App" folder in "regu" target */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		7E6A10000000000000001301 /* reguUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = reguUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7E6A10000000000000000401 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E6A10000000000000000101 /* ReguCore in Frameworks */,
+				7E6A10000000000000000102 /* ReguUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E6A10000000000000001401 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7E6A10000000000000000601 = {
+			isa = PBXGroup;
+			children = (
+				7E6A10000000000000000301 /* App */,
+				7E6A10000000000000001301 /* reguUITests */,
+				7E6A10000000000000000602 /* Config */,
+				7E6A10000000000000000603 /* Packages */,
+				7E6A10000000000000000604 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7E6A10000000000000000602 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A10000000000000000202 /* Edition.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		7E6A10000000000000000603 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A10000000000000000203 /* ReguKit */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		7E6A10000000000000000604 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A10000000000000000201 /* regu.app */,
+				7E6A10000000000000001201 /* reguUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7E6A10000000000000000701 /* regu */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E6A10000000000000000A02 /* Build configuration list for PBXNativeTarget "regu" */;
+			buildPhases = (
+				7E6A10000000000000000801 /* Enforce Blank Line After Top-Level Brace */,
+				7E6A10000000000000000802 /* Sources */,
+				7E6A10000000000000000401 /* Frameworks */,
+				7E6A10000000000000000803 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7E6A10000000000000000301 /* App */,
+			);
+			name = regu;
+			packageProductDependencies = (
+				7E6A10000000000000000501 /* ReguCore */,
+				7E6A10000000000000000502 /* ReguUI */,
+			);
+			productName = regu;
+			productReference = 7E6A10000000000000000201 /* regu.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7E6A10000000000000001701 /* reguUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E6A10000000000000001A01 /* Build configuration list for PBXNativeTarget "reguUITests" */;
+			buildPhases = (
+				7E6A10000000000000001801 /* Sources */,
+				7E6A10000000000000001401 /* Frameworks */,
+				7E6A10000000000000001802 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7E6A10000000000000001601 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				7E6A10000000000000001301 /* reguUITests */,
+			);
+			name = reguUITests;
+			productName = reguUITests;
+			productReference = 7E6A10000000000000001201 /* reguUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7E6A10000000000000000901 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2710;
+				LastUpgradeCheck = 2710;
+				TargetAttributes = {
+					7E6A10000000000000000701 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					7E6A10000000000000001701 = {
+						CreatedOnToolsVersion = 27.1;
+						TestTargetID = 7E6A10000000000000000701;
+					};
+				};
+			};
+			buildConfigurationList = 7E6A10000000000000000A01 /* Build configuration list for PBXProject "regu" */;
+			developmentRegion = ja;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				ja,
+				Base,
+			);
+			mainGroup = 7E6A10000000000000000601;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7E6A10000000000000000C01 /* XCLocalSwiftPackageReference "Packages/ReguKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7E6A10000000000000000604 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7E6A10000000000000000701 /* regu */,
+				7E6A10000000000000001701 /* reguUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7E6A10000000000000000803 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E6A10000000000000001802 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7E6A10000000000000000801 /* Enforce Blank Line After Top-Level Brace */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Enforce Blank Line After Top-Level Brace";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"$SRCROOT/tools/check_top_level_brace_blank_lines.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7E6A10000000000000000802 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E6A10000000000000001801 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7E6A10000000000000001601 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7E6A10000000000000000701 /* regu */;
+			targetProxy = 7E6A10000000000000001101 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7E6A10000000000000000B01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		7E6A10000000000000000B02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7E6A10000000000000000B03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E6A10000000000000000202 /* Edition.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "$(REGU_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "régu";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(REGU_APP_BUNDLE_IDENTIFIER)";
+				PRODUCT_NAME = regu;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7E6A10000000000000000B04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E6A10000000000000000202 /* Edition.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "$(REGU_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "régu";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(REGU_APP_BUNDLE_IDENTIFIER)";
+				PRODUCT_NAME = regu;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7E6A10000000000000001B01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E6A10000000000000000202 /* Edition.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "$(REGU_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(REGU_UITESTS_BUNDLE_IDENTIFIER)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = regu;
+			};
+			name = Debug;
+		};
+		7E6A10000000000000001B02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E6A10000000000000000202 /* Edition.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "$(REGU_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(REGU_UITESTS_BUNDLE_IDENTIFIER)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = regu;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7E6A10000000000000000A01 /* Build configuration list for PBXProject "regu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E6A10000000000000000B01 /* Debug */,
+				7E6A10000000000000000B02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E6A10000000000000000A02 /* Build configuration list for PBXNativeTarget "regu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E6A10000000000000000B03 /* Debug */,
+				7E6A10000000000000000B04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E6A10000000000000001A01 /* Build configuration list for PBXNativeTarget "reguUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E6A10000000000000001B01 /* Debug */,
+				7E6A10000000000000001B02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		7E6A10000000000000000C01 /* XCLocalSwiftPackageReference "Packages/ReguKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/ReguKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7E6A10000000000000000501 /* ReguCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7E6A10000000000000000C01 /* XCLocalSwiftPackageReference "Packages/ReguKit" */;
+			productName = ReguCore;
+		};
+		7E6A10000000000000000502 /* ReguUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7E6A10000000000000000C01 /* XCLocalSwiftPackageReference "Packages/ReguKit" */;
+			productName = ReguUI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 7E6A10000000000000000901 /* Project object */;
+}

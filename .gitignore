@@ -1,0 +1,40 @@
+# Xcode
+## User settings
+xcuserdata/
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Xcode build outputs
+build/
+DerivedData/
+
+# Xcode user-specific state
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcuserstate
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Local signing overrides
+Config/Signing.local.xcconfig
+
+# Claude Code per-developer settings
+.claude/settings.local.json

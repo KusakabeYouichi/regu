@@ -1,0 +1,11 @@
+// Copy this file to Config/Signing.local.xcconfig and adjust values for your team.
+// This file is tracked; Signing.local.xcconfig is gitignored.
+//
+// 書き換えるのは下の 2 行だけ:
+//   REGU_DEVELOPMENT_TEAM      = 自分の Team ID
+//   REGU_APP_BUNDLE_IDENTIFIER = 自分だけの bundle ID
+// UI テストの bundle ID は Edition.xcconfig で $(REGU_APP_BUNDLE_IDENTIFIER).uitests として作られる（ここには書かない）。
+// Xcode の画面（Signing & Capabilities）で bundle ID を変更するのも禁止（1 か所だけリテラルになる）。
+
+REGU_DEVELOPMENT_TEAM = YOUR_TEAM_ID
+REGU_APP_BUNDLE_IDENTIFIER = com.yourdomain.regu
