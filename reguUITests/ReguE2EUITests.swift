@@ -340,6 +340,63 @@ final class ReguE2EUITests: XCTestCase {
         selectPreset("régularisation", app: app)
     }
 
+    // + は「ユーザー設定」の見出しの隣にあり、新しいプリセットは名前も設定も変えずに戻ると(変えて元に戻しても)一覧に残らない。
+    // 名前を変えたものは残る。編集画面の名前の見出しは nom
+    func testE16_UntouchedNewPresetIsNotAdded() throws {
+        try requireIdiom(.phone)
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+        app.buttons["settingsButton"].tap()
+        let addButton = app.buttons["addPresetButton"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5), "一覧に + が無い")
+        XCTAssertFalse(app.navigationBars.buttons["addPresetButton"].exists, "+ がツールバーに残っている")
+        let header = app.staticTexts["ユーザー設定"]
+        XCTAssertEqual(addButton.frame.midY, header.frame.midY, accuracy: 22, "+ が「ユーザー設定」の見出しの行に無い")
+        capture("E16-iphone-add-button-in-header")
+
+        addButton.tap()
+        XCTAssertTrue(app.textFields["presetNameField"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["nom"].exists, "編集画面の見出しが nom でない")
+        capture("E16-iphone-new-preset-editor")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5), "一覧に戻っていない")
+        XCTAssertFalse(app.staticTexts["新しいプリセット"].exists, "何も変えずに戻ったのに追加されている")
+
+        addButton.tap()
+        app.buttons["presetField.hiragana"].firstMatch.tap()
+        let swap = app.buttons["ひらがな↔カタカナ"].firstMatch
+        XCTAssertTrue(swap.waitForExistence(timeout: 5))
+        swap.tap()
+        app.buttons["presetField.hiragana"].firstMatch.tap()
+        let preserve = app.buttons["preserve"].firstMatch
+        XCTAssertTrue(preserve.waitForExistence(timeout: 5))
+        preserve.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5), "一覧に戻っていない")
+        XCTAssertFalse(app.staticTexts["新しいプリセット"].exists, "設定を変えて元に戻したのに追加されている")
+
+        // 編集画面を開いたまま一覧ごと下へ払って閉じても残らない
+        addButton.tap()
+        XCTAssertTrue(app.textFields["presetNameField"].waitForExistence(timeout: 5))
+        let top = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1))
+        top.press(forDuration: 0.1, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95)))
+        let sheetClosed = NSPredicate(format: "exists == false")
+        let nameFieldGone = XCTNSPredicateExpectation(predicate: sheetClosed, object: app.textFields["presetNameField"])
+        XCTAssertEqual(XCTWaiter().wait(for: [nameFieldGone], timeout: 5), .completed, "一覧が閉じていない")
+        capture("E16-iphone-sheet-dismissed")
+        app.buttons["settingsButton"].tap()
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["新しいプリセット"].exists, "編集中に一覧ごと閉じたのに追加されている")
+        app.buttons["closePresetsButton"].tap()
+        app.buttons["settingsButton"].tap()
+
+        createPreset(named: "名前だけ", app: app)
+        app.buttons["settingsButton"].tap()
+        XCTAssertTrue(app.staticTexts["名前だけ"].waitForExistence(timeout: 5), "名前を変えたプリセットが残っていない")
+        capture("E16-iphone-list-after")
+        app.buttons["closePresetsButton"].tap()
+    }
+
     // MARK: - E8(iPad)
 
     func testE8_iPadLaunchConvertsClipboardInBothOrientations() throws {

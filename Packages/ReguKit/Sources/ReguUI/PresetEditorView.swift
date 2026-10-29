@@ -20,7 +20,7 @@ struct PresetEditorView: View {
 
     private func form(for preset: Preset) -> some View {
         Form {
-            Section("名前") {
+            Section("nom") {
                 if preset.isBuiltIn {
                     Text(preset.name)
                     // 入力済みでも編集できる欄だと分かるよう、左に「別名」と出す
@@ -44,7 +44,7 @@ struct PresetEditorView: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 } else {
-                    TextField("名前", text: $name)
+                    TextField("nom", text: $name)
                         .accessibilityIdentifier("presetNameField")
                         .onAppear {
                             name = preset.name

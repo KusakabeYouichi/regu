@@ -334,4 +334,64 @@ struct PresetStoreTests {
         #expect(store.listName(for: .regularisation) == "régularisation")
         #expect(PresetStore(defaults: defaults).alias(for: Preset.regularisation.id) == nil)
     }
+
+    // c06-design.md の N
+    @Test("N1 既定の名前・全 preserve のままなら消え、読み直しても無い")
+    func discardsUntouchedNewPreset() {
+        let store = PresetStore(defaults: defaults)
+        let added = store.add(name: "新しいプリセット")
+
+        #expect(store.discardIfUntouched(added.id, defaultName: "新しいプリセット"))
+
+        #expect(store.preset(id: added.id) == nil)
+        #expect(PresetStore(defaults: defaults).userPresets.isEmpty)
+    }
+
+    @Test("N2 名前だけ変えたものは残る")
+    func keepsRenamedNewPreset() {
+        let store = PresetStore(defaults: defaults)
+        let added = store.add(name: "新しいプリセット")
+        store.rename(added.id, to: "住所用")
+
+        #expect(!store.discardIfUntouched(added.id, defaultName: "新しいプリセット"))
+
+        #expect(PresetStore(defaults: defaults).userPresets.map(\.name) == ["住所用"])
+    }
+
+    @Test("N3 設定を 1 つでも変えたものは残る")
+    func keepsNewPresetWithChangedSetting() {
+        let store = PresetStore(defaults: defaults)
+        let added = store.add(name: "新しいプリセット")
+        store.updateSettings(added.id, to: ConversionSettings(space: .spaceToIdeographic))
+
+        #expect(!store.discardIfUntouched(added.id, defaultName: "新しいプリセット"))
+
+        #expect(PresetStore(defaults: defaults).userPresets.map(\.settings) == [ConversionSettings(space: .spaceToIdeographic)])
+    }
+
+    @Test("N4 名前と設定を変えてから元に戻したものは消える")
+    func discardsNewPresetRevertedToDefaults() {
+        let store = PresetStore(defaults: defaults)
+        let added = store.add(name: "新しいプリセット")
+        store.rename(added.id, to: "住所用")
+        store.updateSettings(added.id, to: ConversionSettings(hiragana: .swap))
+        store.rename(added.id, to: "新しいプリセット")
+        store.updateSettings(added.id, to: ConversionSettings())
+
+        #expect(store.discardIfUntouched(added.id, defaultName: "新しいプリセット"))
+
+        #expect(PresetStore(defaults: defaults).userPresets.isEmpty)
+    }
+
+    @Test("N5 ビルトイン・未知の ID では何もしない")
+    func ignoresBuiltInAndUnknownIDs() {
+        let store = PresetStore(defaults: defaults)
+        let kept = store.add(name: "新しいプリセット")
+
+        #expect(!store.discardIfUntouched(Preset.regularisation.id, defaultName: "régularisation"))
+        #expect(!store.discardIfUntouched(UUID(), defaultName: "新しいプリセット"))
+
+        #expect(store.presets.count == 4)
+        #expect(store.preset(id: kept.id) != nil)
+    }
 }

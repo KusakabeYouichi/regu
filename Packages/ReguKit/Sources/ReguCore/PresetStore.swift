@@ -126,6 +126,19 @@ public final class PresetStore {
         saveUserPresets()
     }
 
+    // 追加した直後のユーザープリセットが、名前も設定(全 preserve)も追加したときのままなら消す。
+    // 途中で変えても戻してあれば消す(判定は呼んだときの状態だけで行う)。消したら true
+    @discardableResult
+    public func discardIfUntouched(_ id: UUID, defaultName: String) -> Bool {
+        guard let preset = userPresets.first(where: { $0.id == id }),
+                preset.name == defaultName,
+                preset.settings == ConversionSettings() else {
+            return false
+        }
+        delete(id)
+        return true
+    }
+
     // 選択中のものを消したら régularisation に戻す
     public func delete(_ id: UUID) {
         guard let index = userPresets.firstIndex(where: { $0.id == id }) else {
