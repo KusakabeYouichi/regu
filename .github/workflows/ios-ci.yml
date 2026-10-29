@@ -1,0 +1,56 @@
+name: iOS CI
+
+# git に入っている状態だけから Release ビルドが通るかを見る（écritu の iOS CI に倣う）。
+# 拾いたいのは手元では気づけない失敗（pbxproj の登録漏れ・コミットし忘れ・新しい clone だけで壊れる設定・Release だけのコンパイラ異常終了）。
+# 変換エンジンの単体テスト（swift test）は辞書などの前提が無く数秒で終わるので、ここでも回す。UI テストは手元で回す
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# CI は検査だけなので、渡される鍵は読み取りだけにする
+permissions:
+  contents: read
+
+jobs:
+  release-build:
+    # macos-26 には Xcode 26 しか無い。Xcode 27 は専用イメージ（公開プレビュー）にある
+    runs-on: xcode-27
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        # タグは動かせるのでコミットで固定する（v4.4.0。écritu と同じ）
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      # 手元と同じ 27.1 に固定する
+      - name: Select Xcode 27.1
+        run: |
+          sudo xcode-select -s /Applications/Xcode_27.1.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Normalize shared scheme
+        run: bash tools/normalize_unicode_project_names.sh
+
+      - name: Swift style check
+        run: bash tools/check_top_level_brace_blank_lines.sh
+
+      - name: Unit tests (ReguKit)
+        working-directory: Packages/ReguKit
+        run: swift test
+
+      - name: Release build
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          xcodebuild \
+            -project "régu.xcodeproj" \
+            -scheme "régu" \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath "build-ci" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build

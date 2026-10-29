@@ -59,7 +59,7 @@ struct PresetEditorView: View {
     // 表示時に保存済みの名前を入れたときも onChange が来るので、変わっていなければ保存しない
     private func commitName(_ newValue: String) {
         guard !newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-              newValue != store.preset(id: presetID)?.name else {
+                newValue != store.preset(id: presetID)?.name else {
             return
         }
         store.rename(presetID, to: newValue)

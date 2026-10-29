@@ -16,6 +16,7 @@ playground.xcworkspace
 
 # Xcode build outputs
 build/
+build-ci/
 DerivedData/
 
 # Xcode user-specific state

@@ -104,7 +104,7 @@ public final class PresetStore {
     // 要素ごとに読み、読めなかった要素だけを捨てる
     private static func loadUserPresets(from defaults: UserDefaults) -> [Preset] {
         guard let data = defaults.data(forKey: Key.userPresets),
-              let decoded = try? JSONDecoder().decode([LossyPreset].self, from: data) else {
+                let decoded = try? JSONDecoder().decode([LossyPreset].self, from: data) else {
             return []
         }
         return decoded.compactMap(\.preset)

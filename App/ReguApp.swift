@@ -53,7 +53,7 @@ struct ReguApp: App {
     // UI テスト（reguUITests）用。起動引数 -reguUITestReset があれば、セッションを作る前にアプリの UserDefaults を消す
     private static func resetDefaultsForUITestIfRequested() {
         guard ProcessInfo.processInfo.arguments.contains("-reguUITestReset"),
-              let domain = Bundle.main.bundleIdentifier else {
+                let domain = Bundle.main.bundleIdentifier else {
             return
         }
         UserDefaults.standard.removePersistentDomain(forName: domain)

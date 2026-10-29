@@ -17,7 +17,7 @@
                BlueprintIdentifier = "7E6A10000000000000000701"
                BuildableName = "regu.app"
                BlueprintName = "regu"
-               ReferencedContainer = "container:regu.xcodeproj">
+               ReferencedContainer = "container:régu.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,7 +31,7 @@
                BlueprintIdentifier = "7E6A10000000000000001701"
                BuildableName = "reguUITests.xctest"
                BlueprintName = "reguUITests"
-               ReferencedContainer = "container:regu.xcodeproj">
+               ReferencedContainer = "container:régu.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -49,7 +49,7 @@
                BlueprintIdentifier = "7E6A10000000000000001701"
                BuildableName = "reguUITests.xctest"
                BlueprintName = "reguUITests"
-               ReferencedContainer = "container:regu.xcodeproj">
+               ReferencedContainer = "container:régu.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,7 +71,7 @@
             BlueprintIdentifier = "7E6A10000000000000000701"
             BuildableName = "regu.app"
             BlueprintName = "regu"
-            ReferencedContainer = "container:regu.xcodeproj">
+            ReferencedContainer = "container:régu.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -88,7 +88,7 @@
             BlueprintIdentifier = "7E6A10000000000000000701"
             BuildableName = "regu.app"
             BlueprintName = "regu"
-            ReferencedContainer = "container:regu.xcodeproj">
+            ReferencedContainer = "container:régu.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

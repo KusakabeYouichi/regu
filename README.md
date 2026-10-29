@@ -14,7 +14,7 @@
 - `Packages/ReguKit/` ローカル Swift Package
   - `ReguCore` 変換エンジン・プリセット・保存・画面の状態（Foundation のみ）
   - `ReguUI` SwiftUI の画面（iOS / macOS の差分は結果欄とクリップボードに閉じる）
-- `regu.xcodeproj` プロジェクト。`project.pbxproj` が正本で、直接編集する（生成ツールは使わない）
+- `régu.xcodeproj` プロジェクト（スキームも `régu`。ターゲット名は `regu` / `reguUITests`）。`project.pbxproj` が正本で、直接編集する（生成ツールは使わない）
 
 ## セットアップ
 
@@ -23,6 +23,14 @@
 ```sh
 cp Config/Signing.local.xcconfig.example Config/Signing.local.xcconfig
 # REGU_DEVELOPMENT_TEAM と REGU_APP_BUNDLE_IDENTIFIER を書き換える
+```
+
+プロジェクト名の é を Xcode が分解形や実体参照に書き換えて差分が出るのを防ぐため、クローン後に 1 回だけ次を実行する（écritu と同じ対策）。
+
+```sh
+git config core.hooksPath .githooks
+git config filter.xcscheme-nfc.clean "perl -CSD -pe 's/(?:e&#x301;|e&#769;|&#x[eE]9;|&#233;|e\\x{301}|\xC3\xA9|\xE9)gu/\\x{E9}gu/g'"
+git config filter.xcscheme-nfc.smudge cat
 ```
 
 ## テストとビルド
@@ -37,7 +45,7 @@ swift test
 アプリのビルド（シミュレータ）:
 
 ```sh
-xcodebuild -project regu.xcodeproj -scheme regu \
+xcodebuild -project régu.xcodeproj -scheme régu \
   -destination "platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.5" \
   CODE_SIGNING_ALLOWED=NO build
 ```

@@ -10,7 +10,7 @@ public protocol SettingOption: CaseIterable, Codable, Hashable, Sendable, RawRep
 extension SettingOption {
     static func decodeLossy(from decoder: any Decoder) -> Self {
         guard let container = try? decoder.singleValueContainer(),
-              let raw = try? container.decode(String.self) else {
+                let raw = try? container.decode(String.self) else {
             return .preserve
         }
         return Self(rawValue: raw) ?? .preserve

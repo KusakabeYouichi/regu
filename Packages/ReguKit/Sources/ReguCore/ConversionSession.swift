@@ -56,7 +56,7 @@ public final class ConversionSession {
         }
         let changeCount = pasteboard.changeCount
         guard changeCount != storedCount(Key.lastWrittenChangeCount),
-              changeCount != storedCount(Key.lastAttemptedChangeCount) else {
+                changeCount != storedCount(Key.lastAttemptedChangeCount) else {
             return
         }
         defaults.set(changeCount, forKey: Key.lastAttemptedChangeCount)
