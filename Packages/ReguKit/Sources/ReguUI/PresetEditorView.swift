@@ -24,7 +24,7 @@ struct PresetEditorView: View {
                 if preset.isBuiltIn {
                     Text(preset.name)
                     // 入力済みでも編集できる欄だと分かるよう、左に「別名」と出す
-                    LabeledContent("別名") {
+                    LabeledContent("alias") {
                         TextField("例: 正規化", text: $alias)
                             .multilineTextAlignment(.trailing)
                             .accessibilityIdentifier("presetAliasField")
@@ -40,7 +40,7 @@ struct PresetEditorView: View {
                             }
                             .onDisappear(perform: commitAlias)
                     }
-                    Text("ビルトインのプリセットの変換設定は変更できません。別名は付けられます。一覧で複製すると設定を編集できます。")
+                    Text("ビルトインのプリセットの変換設定は変更できません。alias は付けられます。一覧で複製すると設定を編集できます。")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 } else {
