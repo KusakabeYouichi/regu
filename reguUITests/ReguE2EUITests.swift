@@ -2,12 +2,15 @@ import XCTest
 
 // E2E 計画（c01-e2e-plan.md）の E1–E9 を XCUITest で行う。
 // クリップボードはテストランナーから UIPasteboard.general で読み書きする（simctl pbcopy の代わり）。
-// 各テストは -reguUITestReset 付きの起動から始め、前のテストの状態に依存しない
+// 各テストは -reguUITestReset 付きの起動から始め、前のテストの状態に依存しない。
+// E11〜E14 は c02（メイン画面の刷新）で足した「コピーしました」の表示・横長の配置・プリセットのチップ
 @MainActor
 final class ReguE2EUITests: XCTestCase {
     private static let allowPasteLabels = ["ペーストを許可", "Allow Paste"]
     private static let e1Input = "ＡＢＣ１２３　ｶﾀｶﾅ「x」㎜"
     private static let e1Output = "ABC123 カタカナ『x』mm"
+    // チップの幅に必ず収まらない長さのユーザープリセット名
+    private static let longPresetName = "ふりがな用（銀行・カード会社・証券口座）"
 
     // MARK: - E1–E7, E9（iPhone）
 
@@ -15,6 +18,9 @@ final class ReguE2EUITests: XCTestCase {
         try requireIdiom(.phone)
         let app = XCUIApplication()
         launchWithClipboard(Self.e1Input, app: app)
+        // 表示は 1.5 秒だけなので、他の確認より先に見る
+        XCTAssertTrue(element("copiedBadge", in: app).waitForExistence(timeout: 5), "起動時の自動変換で「コピーしました」が出ない")
+        capture("E1-iphone-copied-badge")
 
         XCTAssertEqual(element("input", in: app).value as? String, Self.e1Input)
         assertSelectedPreset("régularisation", app: app)
@@ -31,7 +37,9 @@ final class ReguE2EUITests: XCTestCase {
         waitForValue(Self.e1Output, of: element("output", in: app))
 
         goHomeAndReturn(app: app)
+        assertCopiedBadgeDoesNotAppear(app: app)
         let alertShown = allowPasteIfPrompted(timeout: 3)
+        XCTAssertFalse(element("copiedBadge", in: app).exists, "コピーしていないのに「コピーしました」が出た")
 
         // 再変換が起きたかどうかは、続く input の assertion で検出する
         XCTAssertFalse(alertShown, "前提「自分の出力を読むときはペースト許可が出ない」が崩れた")
@@ -71,6 +79,7 @@ final class ReguE2EUITests: XCTestCase {
 
         replaceText(of: element("input", in: app), with: "ｶﾅ")
         capture("E4-iphone-typed")
+        assertConvertButtonHittableWithKeyboard(app: app)
         app.buttons["convertButton"].tap()
 
         waitForValue("カナ", of: element("output", in: app))
@@ -100,7 +109,9 @@ final class ReguE2EUITests: XCTestCase {
         convertWithSwapPreset(named: "テスト", app: app)
 
         goHomeAndReturn(app: app)
+        assertCopiedBadgeDoesNotAppear(app: app)
         let alertShown = allowPasteIfPrompted(timeout: 3)
+        XCTAssertFalse(element("copiedBadge", in: app).exists, "コピーしていないのに「コピーしました」が出た")
 
         // 再変換が起きたかどうかは、続く input の assertion で検出する
         XCTAssertFalse(alertShown, "前提「自分の出力を読むときはペースト許可が出ない」が崩れた")
@@ -158,18 +169,108 @@ final class ReguE2EUITests: XCTestCase {
         launchWithEmptyClipboard(app: app)
 
         replaceText(of: element("input", in: app), with: "ｶﾅ")
+        assertConvertButtonHittableWithKeyboard(app: app)
         app.buttons["convertButton"].tap()
         waitForValue("カナ", of: element("output", in: app))
         selectPreset("ruby héritée", app: app)
 
         goHomeAndReturn(app: app)
+        assertCopiedBadgeDoesNotAppear(app: app)
         let alertShown = allowPasteIfPrompted(timeout: 3)
+        XCTAssertFalse(element("copiedBadge", in: app).exists, "コピーしていないのに「コピーしました」が出た")
 
         XCTAssertFalse(alertShown, "前提「自分の出力を読むときはペースト許可が出ない」が崩れた")
         XCTAssertEqual(element("input", in: app).value as? String, "ｶﾅ")
         XCTAssertEqual(element("output", in: app).value as? String, "カナ")
         capture("E10-iphone-after-return")
         XCTAssertEqual(readPasteboard(), "カナ")
+    }
+
+    func testE11_CopiedBadgeAppearsOnceAndDisappears() throws {
+        try requireIdiom(.phone)
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+        let badge = element("copiedBadge", in: app)
+        XCTAssertFalse(badge.exists, "コピーしていないのに「コピーしました」が出ている")
+
+        replaceText(of: element("input", in: app), with: "ｶﾅ")
+        app.buttons["convertButton"].tap()
+        XCTAssertTrue(badge.waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
+
+        // 表示中に押し直す。数え直さなければ、1 度目の表示から 1.5 秒（2 度目の押下からはそれより短い時間）で消える。
+        // 1 度目の表示の時刻は検出の遅れで正確に取れないため、待たずに押し直し、2 度目の押下からの経過だけを見る
+        XCTAssertTrue(badge.exists, "2 度目を押す前に「コピーしました」が消えた")
+        let secondTap = Date()
+        app.buttons["convertButton"].tap()
+        capture("E11-iphone-copied-badge")
+        let badges = app.descendants(matching: .any).matching(identifier: "copiedBadge")
+        XCTAssertEqual(badges.count, 1, "表示中にもう一度押すと「コピーしました」が増えた")
+
+        let gone = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: badge)
+        XCTAssertEqual(XCTWaiter.wait(for: [gone], timeout: 5), .completed, "「コピーしました」が消えない")
+        XCTAssertGreaterThanOrEqual(Date().timeIntervalSince(secondTap), 1.2, "再押下で表示時間が数え直されていない")
+        XCTAssertEqual(readPasteboard(), "カナ")
+    }
+
+    // 表示中にホームへ出て戻ったら、残り時間に関係なく消えている
+    func testE14_CopiedBadgeIsHiddenAfterReturningFromHome() throws {
+        try requireIdiom(.phone)
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+        replaceText(of: element("input", in: app), with: "ｶﾅ")
+        app.buttons["convertButton"].tap()
+        XCTAssertTrue(element("copiedBadge", in: app).waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
+
+        goHomeAndReturn(app: app)
+
+        XCTAssertFalse(element("copiedBadge", in: app).exists, "ホームから戻った後も「コピーしました」が残っている")
+        capture("E14-iphone-after-return")
+    }
+
+    // 横長でキーボードが出ていても、両カードと変換ボタンが見えて押せる
+    func testE12_LandscapeKeepsCardsAndConvertButtonUsableWithKeyboard() throws {
+        try requireIdiom(.phone)
+        addTeardownBlock {
+            XCUIDevice.shared.orientation = .portrait
+        }
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+        XCUIDevice.shared.orientation = .landscapeLeft
+        waitForLandscape(app: app)
+
+        replaceText(of: element("input", in: app), with: "ｶﾅ")
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "キーボードが出ていない")
+        for identifier in ["input", "output", "convertButton"] {
+            XCTAssertTrue(element(identifier, in: app).isHittable, "横長・キーボード表示中に \(identifier) が押せない")
+        }
+        capture("E12-iphone-landscape-keyboard")
+
+        app.buttons["convertButton"].tap()
+        XCTAssertTrue(element("copiedBadge", in: app).waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
+        waitForValue("カナ", of: element("output", in: app))
+        capture("E12-iphone-landscape-after-convert")
+        XCUIDevice.shared.orientation = .portrait
+        XCTAssertEqual(readPasteboard(), "カナ")
+    }
+
+    // 長い名前でもチップは 1 行のまま左半分に収まり、中央の変換ボタンに重ならない
+    func testE13_PresetChipFitsLongNamesBesideCenteredConvertButton() throws {
+        try requireIdiom(.phone)
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+
+        selectPreset("Adresse héritée", app: app)
+        assertChipBesideCenteredConvertButton(app: app)
+        replaceText(of: element("input", in: app), with: "ＡＢＣ１２３　ｶﾀｶﾅ")
+        app.buttons["convertButton"].tap()
+        XCTAssertTrue(element("copiedBadge", in: app).waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
+        capture("E13-iphone-adresse-heritee")
+
+        app.buttons["settingsButton"].tap()
+        createPreset(named: Self.longPresetName, app: app)
+        selectPreset(Self.longPresetName, app: app)
+        assertChipBesideCenteredConvertButton(app: app)
+        capture("E13-iphone-long-user-preset")
     }
 
     // MARK: - E8（iPad）
@@ -179,6 +280,8 @@ final class ReguE2EUITests: XCTestCase {
         let app = XCUIApplication()
         XCUIDevice.shared.orientation = .portrait
         launchWithClipboard(Self.e1Input, app: app)
+        XCTAssertTrue(element("copiedBadge", in: app).waitForExistence(timeout: 5), "起動時の自動変換で「コピーしました」が出ない")
+        capture("E8-ipad-copied-badge")
 
         XCTAssertEqual(element("input", in: app).value as? String, Self.e1Input)
         assertSelectedPreset("régularisation", app: app)
@@ -187,13 +290,23 @@ final class ReguE2EUITests: XCTestCase {
         capture("E8-ipad-portrait")
 
         XCUIDevice.shared.orientation = .landscapeLeft
-        Thread.sleep(forTimeInterval: 1.5)
+        waitForLandscape(app: app)
         assertMainControlsVisible(app: app)
         XCTAssertEqual(element("output", in: app).value as? String, Self.e1Output)
         capture("E8-ipad-landscape")
+        element("input", in: app).tap()
+        // ソフトウェアキーボードが出ない環境（ハードウェアキーボード接続）では、この確認だけを最後に skip として残す
+        let keyboardShown = app.keyboards.firstMatch.waitForExistence(timeout: 5)
+        if keyboardShown {
+            XCTAssertTrue(app.buttons["convertButton"].isHittable, "横長・キーボード表示中に変換ボタンが押せない")
+            capture("E8-ipad-landscape-keyboard")
+        }
         XCUIDevice.shared.orientation = .portrait
 
         XCTAssertEqual(readPasteboard(), Self.e1Output)
+        if !keyboardShown {
+            throw XCTSkip("横長でソフトウェアキーボードが出なかったため、キーボード表示中の変換ボタンの確認は行っていない（ハードウェアキーボード接続の可能性）")
+        }
     }
 
     // MARK: - 起動・前面化
@@ -332,6 +445,17 @@ final class ReguE2EUITests: XCTestCase {
         app.buttons["closePresetsButton"].tap()
     }
 
+    // 歯車画面（プリセット一覧）が出ている前提。追加 → 名前だけ付けて一覧へ戻って閉じる（設定は既定のまま）
+    private func createPreset(named name: String, app: XCUIApplication) {
+        app.buttons["addPresetButton"].tap()
+        let nameField = app.textFields["presetNameField"]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 5))
+        replaceText(of: nameField, with: name)
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.staticTexts[name].waitForExistence(timeout: 5), "一覧に \(name) が無い")
+        app.buttons["closePresetsButton"].tap()
+    }
+
     private func convertWithSwapPreset(named name: String, app: XCUIApplication) {
         selectPreset(name, app: app)
         replaceText(of: element("input", in: app), with: "ひらカタ")
@@ -354,11 +478,47 @@ final class ReguE2EUITests: XCTestCase {
         XCTAssertEqual(result, .completed, "値が \(expected) にならない（実際: \(String(describing: element.value))）")
     }
 
-    // Picker(.menu) の label は「プリセット、<選択中の名前>」になる
+    // プリセットのチップ（Menu）は label「プリセット」、value に選択中の名前を持つ
     private func assertSelectedPreset(_ name: String, app: XCUIApplication) {
         let picker = app.buttons["presetPicker"]
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
-        XCTAssertEqual(picker.label, "プリセット、\(name)")
+        XCTAssertEqual(picker.label, "プリセット")
+        XCTAssertEqual(picker.value as? String, name)
+    }
+
+    // チップは画面内で変換ボタンの左に収まり、変換ボタンは画面の中央にある。
+    // 文字の縮小・末尾の省略そのものは XCUITest からは見えない（label は全文のまま）ので、枠の位置だけを見る
+    private func assertChipBesideCenteredConvertButton(app: XCUIApplication) {
+        let chip = app.buttons["presetPicker"].frame
+        let convert = app.buttons["convertButton"].frame
+        let window = app.windows.firstMatch.frame
+        XCTAssertTrue(window.contains(chip), "チップが画面外にはみ出している（\(chip)）")
+        XCTAssertFalse(chip.intersects(convert), "チップが変換ボタンに重なっている")
+        XCTAssertLessThanOrEqual(chip.maxX, convert.minX, "チップが変換ボタンの左にない")
+        XCTAssertEqual(convert.midX, window.midX, accuracy: 1, "変換ボタンが中央にない")
+    }
+
+    // 回転は非同期なので、アプリの window が横長になるまで待つ
+    private func waitForLandscape(app: XCUIApplication) {
+        let isLandscape = NSPredicate { object, _ in
+            guard let window = object as? XCUIElement else {
+                return false
+            }
+            return window.frame.width > window.frame.height
+        }
+        let expectation = XCTNSPredicateExpectation(predicate: isLandscape, object: app.windows.firstMatch)
+        XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .completed, "横長に回っていない（\(app.windows.firstMatch.frame)）")
+    }
+
+    // コピーしていないときは「コピーしました」が出ない（出るなら前面化の直後なので、その間だけ見張る）
+    private func assertCopiedBadgeDoesNotAppear(app: XCUIApplication) {
+        XCTAssertFalse(element("copiedBadge", in: app).waitForExistence(timeout: 2), "コピーしていないのに「コピーしました」が出た")
+    }
+
+    // キーボード表示中でも変換ボタンが隠れず押せる
+    private func assertConvertButtonHittableWithKeyboard(app: XCUIApplication) {
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "キーボードが出ていない")
+        XCTAssertTrue(app.buttons["convertButton"].isHittable, "キーボード表示中に変換ボタンが押せない")
     }
 
     // 歯車画面で既定プリセットを開き、名前欄が無く設定の Picker が無効であること・削除の操作が無いことを確かめて一覧に戻る

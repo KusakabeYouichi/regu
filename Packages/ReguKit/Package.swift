@@ -13,7 +13,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "ReguCore"),
-        .target(name: "ReguUI", dependencies: ["ReguCore"]),
+        .target(name: "ReguUI", dependencies: ["ReguCore"], resources: [.process("Resources")]),
         .testTarget(name: "ReguCoreTests", dependencies: ["ReguCore"])
     ]
 )

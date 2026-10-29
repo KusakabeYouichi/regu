@@ -48,6 +48,7 @@ struct PresetListView: View {
                 }
             }
         }
+        .tint(Theme.accent)
     }
 
     private func row(for preset: Preset) -> some View {
