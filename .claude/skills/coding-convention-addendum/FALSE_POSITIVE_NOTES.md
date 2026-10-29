@@ -7,7 +7,7 @@ SKILL.md 本体の補助資料として扱い、検査ロジックを見直す�
 ## 共通前提
 
 - 対象はプログラムのソースを含むテキストファイルです。
-- `build/`、`.build/`（Swift Package のビルド成果物）、`régu.xcodeproj/xcuserdata/` は対象外です。
+- `build/`、`.build/`(Swift Package のビルド成果物)、`régu.xcodeproj/xcuserdata/` は対象外です。
 - Markdown のコードブロックは原則として実コード検査の対象外です。
 - コメントと文字列リテラルは、実コード規則の判定対象から外します。
 

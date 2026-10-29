@@ -46,7 +46,7 @@ public enum Converter {
 
     // MARK: - accent
 
-    // CJK 互換漢字（U+F900-FAFF, U+2F800-2FA1F）を含む書記素は正規化すると統合漢字に変わるため除外する
+    // CJK 互換漢字(U+F900-FAFF, U+2F800-2FA1F)を含む書記素は正規化すると統合漢字に変わるため除外する
     private static func convertAccent(_ text: String, _ option: AccentOption) -> String {
         guard option != .preserve else {
             return text
@@ -71,7 +71,7 @@ public enum Converter {
 
     // MARK: - alphabet
 
-    // Ａ-Ｚ ａ-ｚ ０-９ ↔ ASCII（全角と ASCII の差は 0xFEE0）
+    // Ａ-Ｚ ａ-ｚ ０-９ ↔ ASCII(全角と ASCII の差は 0xFEE0)
     private static func convertAlphabet(_ scalar: Unicode.Scalar, _ option: AlphabetOption) -> Unicode.Scalar {
         switch option {
         case .preserve:
@@ -102,7 +102,7 @@ public enum Converter {
     private static let fullwidthYen: Unicode.Scalar = "\u{FFE5}"
     private static let fullwidthMacron: Unicode.Scalar = "\u{FFE3}"
 
-    // 全角記号（U+FF01-FF5E の英数以外）↔ ASCII 記号。CP932 系は 0x5C=¥, 0x7E=‾ として ￥ ￣ と対応させる
+    // 全角記号(U+FF01-FF5E の英数以外)↔ ASCII 記号。CP932 系は 0x5C=¥, 0x7E=‾ として ￥ ￣ と対応させる
     private static func convertSymbol(_ text: String, _ option: SymbolOption) -> String {
         guard option != .preserve else {
             return text

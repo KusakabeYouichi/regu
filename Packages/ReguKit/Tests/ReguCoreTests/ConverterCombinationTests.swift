@@ -1,7 +1,7 @@
 import Testing
 @testable import ReguCore
 
-// c01-tests.md の L（組み合わせと適用順）
+// c01-tests.md の L(組み合わせと適用順)
 @Suite("Converter 組み合わせ・順序")
 struct ConverterCombinationTests {
     @Test("L1 ひらがなをカタカナにしてから半角にする")

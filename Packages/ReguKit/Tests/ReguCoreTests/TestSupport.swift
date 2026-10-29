@@ -1,7 +1,7 @@
 import Foundation
 @testable import ReguCore
 
-// Swift の String の == は正規等価で比べる（é と e+U+0301 が等しい）ため、変換結果はスカラー列で比べる
+// Swift の String の == は正規等価で比べる(é と e+U+0301 が等しい)ため、変換結果はスカラー列で比べる
 func scalars(_ text: String) -> [Unicode.Scalar] {
     Array(text.unicodeScalars)
 }
@@ -30,9 +30,9 @@ final class FakePasteboard: Pasteboard {
     private var count = 0
     private var reportsStaleCountOnce = false
     private(set) var content: String?
-    // ペースト許可を拒否された状態（hasStrings は true のまま string が nil）
+    // ペースト許可を拒否された状態(hasStrings は true のまま string が nil)
     var deniesRead = false
-    // 自分の書き込み直後の 1 回だけ古い changeCount を返す（iOS で観測した挙動）
+    // 自分の書き込み直後の 1 回だけ古い changeCount を返す(iOS で観測した挙動)
     var lagsAfterOwnWrite = false
 
     var changeCount: Int {

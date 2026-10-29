@@ -1,6 +1,6 @@
 import Foundation
 
-// 各設定項目の選択肢。保存値（rawValue）が未知なら preserve として読む
+// 各設定項目の選択肢。保存値(rawValue)が未知なら preserve として読む
 public protocol SettingOption: CaseIterable, Codable, Hashable, Sendable, RawRepresentable where RawValue == String {
     static var preserve: Self { get }
     // numbers「設定項目」シートの表記
@@ -263,7 +263,7 @@ public struct ConversionSettings: Codable, Hashable, Sendable {
     }
 }
 
-// 編集画面の Section（numbers の group 列）
+// 編集画面の Section(numbers の group 列)
 public enum SettingGroup: String, CaseIterable, Identifiable, Sendable {
     case latin
     case espace
@@ -296,7 +296,7 @@ public struct SettingChoice: Hashable, Identifiable, Sendable {
     public var id: String { rawValue }
 }
 
-// 編集画面の 1 行（numbers の設定名列）
+// 編集画面の 1 行(numbers の設定名列)
 public enum SettingField: String, CaseIterable, Identifiable, Sendable {
     case alphabet
     case accent
@@ -373,7 +373,7 @@ extension ConversionSettings {
         }
     }
 
-    // 未知の値は無視する（選択肢は SettingField.choices からしか来ない）
+    // 未知の値は無視する(選択肢は SettingField.choices からしか来ない)
     public mutating func setRawValue(_ rawValue: String, for field: SettingField) {
         switch field {
         case .alphabet: alphabet = AlphabetOption(rawValue: rawValue) ?? alphabet

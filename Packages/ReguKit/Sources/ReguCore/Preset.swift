@@ -34,7 +34,7 @@ public struct Preset: Codable, Hashable, Identifiable, Sendable {
     }
 }
 
-// numbers「préréglages」シートの 3 つ（ruby héritée の hiragana のみ決定7 で変更）
+// numbers「préréglages」シートの 3 つ(ruby héritée の hiragana のみ決定7 で変更)
 extension Preset {
     public static let regularisation = Preset(
         id: UUID(uuidString: "6F1C2A10-0000-4000-8000-000000000001")!,

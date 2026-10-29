@@ -15,7 +15,7 @@
 			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
 			<key>NSPrivacyAccessedAPITypeReasons</key>
 			<array>
-				<!-- CA92.1: 自アプリのみが読み書きする設定（プリセット・選択中のプリセット・クリップボードの changeCount）へのアクセス -->
+				<!-- CA92.1: 自アプリのみが読み書きする設定(プリセット・選択中のプリセット・クリップボードの changeCount)へのアクセス -->
 				<string>CA92.1</string>
 			</array>
 		</dict>

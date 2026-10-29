@@ -1,8 +1,8 @@
-// 署名用の識別子。ここはプレースホルダーのままにし、実際の値は Config/Signing.local.xcconfig（gitignore）に書く。
+// 署名用の識別子。ここはプレースホルダーのままにし、実際の値は Config/Signing.local.xcconfig(gitignore)に書く。
 // 雛形は Config/Signing.local.xcconfig.example
 REGU_DEVELOPMENT_TEAM = YOUR_TEAM_ID
 REGU_APP_BUNDLE_IDENTIFIER = com.example.regu
-// UI テスト（reguUITests）の bundle ID はアプリの bundle ID から作る（Signing.local.xcconfig で上書きしない）
+// UI テスト(reguUITests)の bundle ID はアプリの bundle ID から作る(Signing.local.xcconfig で上書きしない)
 REGU_UITESTS_BUNDLE_IDENTIFIER = $(REGU_APP_BUNDLE_IDENTIFIER).uitests
 
 // Optional per-developer signing overrides (ignored from git).

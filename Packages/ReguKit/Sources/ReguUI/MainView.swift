@@ -1,8 +1,8 @@
 import ReguCore
 import SwiftUI
 
-// 縦長: 上に入力カード（編集可） / 中にプリセット・変換・設定の行 / 下に結果カード（読み取り専用・選択可）。
-// 横長（画面の幅 > 高さ。機種では分けない）: 左に入力カード / 中央にプリセット・変換・設定の列 / 右に結果カード
+// 縦長: 上に入力カード(編集可) / 中にプリセット・変換・設定の行 / 下に結果カード(読み取り専用・選択可)。
+// 横長(画面の幅 > 高さ。機種では分けない): 左に入力カード / 中央にプリセット・変換・設定の列 / 右に結果カード
 public struct MainView: View {
     // 「コピーしました」を出しておく時間
     private static let badgeDuration: Duration = .seconds(1.5)
@@ -10,7 +10,7 @@ public struct MainView: View {
     private static let headerSpacing: CGFloat = 12
     // 横長のときの中央の列の幅
     private static let controlColumnWidth: CGFloat = 150
-    // 中央の列がこの高さに満たないとき（横長でキーボード表示中など）は、タイルを縮めてキャプションを隠す
+    // 中央の列がこの高さに満たないとき(横長でキーボード表示中など)は、タイルを縮めてキャプションを隠す
     private static let regularColumnMinHeight: CGFloat = 200
 
     @Bindable private var session: ConversionSession
@@ -26,7 +26,7 @@ public struct MainView: View {
         self.session = session
     }
 
-    // 縦横の切り替えで入力欄・結果欄を作り直さないよう（フォーカス・全選択を保つ）、AnyLayout で並べ方だけ替える
+    // 縦横の切り替えで入力欄・結果欄を作り直さないよう(フォーカス・全選択を保つ)、AnyLayout で並べ方だけ替える
     public var body: some View {
         let layout = isLandscape ? AnyLayout(HStackLayout(spacing: 16)) : AnyLayout(VStackLayout(spacing: 16))
         layout {
@@ -40,7 +40,7 @@ public struct MainView: View {
         }
         .padding(.horizontal)
         .padding(.vertical, isLandscape && isInputFocused ? 8 : 16)
-        // 縦横はキーボードを除いた領域で決める（キーボードで高さが減っても縦長のまま扱う）
+        // 縦横はキーボードを除いた領域で決める(キーボードで高さが減っても縦長のまま扱う)
         .background {
             Color.clear
                 .ignoresSafeArea(.keyboard)
@@ -72,7 +72,7 @@ public struct MainView: View {
         }
     }
 
-    // キーボード表示中・横長はカードの最小高さを下げ、操作行（列）が隠れないようにする
+    // キーボード表示中・横長はカードの最小高さを下げ、操作行(列)が隠れないようにする
     private var inputCard: some View {
         VStack(alignment: .leading, spacing: Self.headerSpacing) {
             cardHeader("entrée")
@@ -130,7 +130,7 @@ public struct MainView: View {
     }
 
     // 左右を同じ幅にして、変換ボタンを常に中央に置く。文字が大きくても 1 行に収める
-    // （チップの名前は入りきらなければ 0.7 倍まで縮め、それでも入らなければ末尾を省略する）
+    // (チップの名前は入りきらなければ 0.7 倍まで縮め、それでも入らなければ末尾を省略する)
     private var controlRow: some View {
         HStack(spacing: 12) {
             presetChip(height: 44)
@@ -142,7 +142,7 @@ public struct MainView: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 
-    // 横長の中央の列。上からチップ・変換ボタン・設定。高さが足りなければ間を詰めタイルを小さくして、変換ボタンを必ず見せる（押せる大きさ 44pt は保つ）
+    // 横長の中央の列。上からチップ・変換ボタン・設定。高さが足りなければ間を詰めタイルを小さくして、変換ボタンを必ず見せる(押せる大きさ 44pt は保つ)
     private var controlColumn: some View {
         let isCompact = controlColumnHeight < Self.regularColumnMinHeight
         return VStack(spacing: isCompact ? 4 : 12) {
@@ -177,13 +177,13 @@ public struct MainView: View {
             Picker("プリセット", selection: presetSelection) {
                 Section {
                     ForEach(Preset.builtIns) { preset in
-                        Text(preset.name).tag(preset.id)
+                        Text(session.store.displayName(for: preset)).tag(preset.id)
                     }
                 }
                 if !session.store.userPresets.isEmpty {
                     Section {
                         ForEach(session.store.userPresets) { preset in
-                            Text(preset.name).tag(preset.id)
+                            Text(session.store.displayName(for: preset)).tag(preset.id)
                         }
                     }
                 }
@@ -191,7 +191,7 @@ public struct MainView: View {
             .pickerStyle(.inline)
         } label: {
             HStack(spacing: 4) {
-                Text(session.store.selectedPreset.name)
+                Text(session.store.displayName(for: session.store.selectedPreset))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .truncationMode(.tail)
@@ -206,7 +206,7 @@ public struct MainView: View {
         }
         .menuOrder(.fixed)
         .accessibilityLabel("プリセット")
-        .accessibilityValue(session.store.selectedPreset.name)
+        .accessibilityValue(session.store.displayName(for: session.store.selectedPreset))
         .accessibilityIdentifier("presetPicker")
     }
 

@@ -2,19 +2,19 @@
 
 クリップボードの文字列を、選んだプリセットの規則で変換する iPhone / iPad アプリ。
 
-- 前面に来るたび（起動時と、バックグラウンドからの復帰時）に、クリップボードに文字列があれば入力欄へ読み込み、
+- 前面に来るたび(起動時と、バックグラウンドからの復帰時)に、クリップボードに文字列があれば入力欄へ読み込み、
   前回選んだプリセットで変換し、結果を全選択して表示し、結果をクリップボードへ書き戻す
 - 自分が書き戻した内容は再び変換しない
 - 変換規則は英数字・アクセント・空白・カナ・ひらがな・記号・鉤括弧・単位・HTML / URL エンティティの 10 項目。
-  既定のプリセット 3 つ（régularisation / Adresse héritée / ruby héritée）に加えて、名前付きのプリセットを作れる
+  既定のプリセット 3 つ(régularisation / Adresse héritée / ruby héritée)に加えて、名前付きのプリセットを作れる
 
 ## 構成
 
-- `App/` iOS アプリの入口（`ReguApp.swift`、アセット、プライバシーマニフェスト）
+- `App/` iOS アプリの入口(`ReguApp.swift`、アセット、プライバシーマニフェスト)
 - `Packages/ReguKit/` ローカル Swift Package
-  - `ReguCore` 変換エンジン・プリセット・保存・画面の状態（Foundation のみ）
-  - `ReguUI` SwiftUI の画面（iOS / macOS の差分は結果欄とクリップボードに閉じる）
-- `régu.xcodeproj` プロジェクト（スキームも `régu`。ターゲット名は `regu` / `reguUITests`）。`project.pbxproj` が正本で、直接編集する（生成ツールは使わない）
+  - `ReguCore` 変換エンジン・プリセット・保存・画面の状態(Foundation のみ)
+  - `ReguUI` SwiftUI の画面(iOS / macOS の差分は結果欄とクリップボードに閉じる)
+- `régu.xcodeproj` プロジェクト(スキームも `régu`。ターゲット名は `regu` / `reguUITests`)。`project.pbxproj` が正本で、直接編集する(生成ツールは使わない)
 
 ## セットアップ
 
@@ -25,7 +25,7 @@ cp Config/Signing.local.xcconfig.example Config/Signing.local.xcconfig
 # REGU_DEVELOPMENT_TEAM と REGU_APP_BUNDLE_IDENTIFIER を書き換える
 ```
 
-プロジェクト名の é を Xcode が分解形や実体参照に書き換えて差分が出るのを防ぐため、クローン後に 1 回だけ次を実行する（écritu と同じ対策）。
+プロジェクト名の é を Xcode が分解形や実体参照に書き換えて差分が出るのを防ぐため、クローン後に 1 回だけ次を実行する(écritu と同じ対策)。
 
 ```sh
 git config core.hooksPath .githooks
@@ -42,7 +42,7 @@ cd Packages/ReguKit
 swift test
 ```
 
-アプリのビルド（シミュレータ）:
+アプリのビルド(シミュレータ):
 
 ```sh
 xcodebuild -project régu.xcodeproj -scheme régu \
@@ -52,4 +52,4 @@ xcodebuild -project régu.xcodeproj -scheme régu \
 
 名前だけで指定すると最新の iOS ランタイムから探すため、その機種が無いと失敗する。
 使えるシミュレータは `xcrun simctl list devices available` で確かめ、`name=` と `OS=` を手元の機種に合わせる。
-最低 OS は iOS 18（パッケージは macOS 15 でもビルドできる）。
+最低 OS は iOS 18(パッケージは macOS 15 でもビルドできる)。

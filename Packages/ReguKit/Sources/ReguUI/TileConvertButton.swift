@@ -1,8 +1,8 @@
 import SwiftUI
 
-// 変換ボタン。白い陶器のタイルに「れ＋朱の点」の画像を載せ、直下に小さく「変換」（高さが足りないときは省く）。
+// 変換ボタン。白い陶器のタイルに「れ＋朱の点」の画像を載せ、直下に小さく「変換」(高さが足りないときは省く)。
 // タイルの面・角丸・影は ここで描き、画像は透過の筆文字だけを持つ。
-// VoiceOver には 1 要素「変換」として見せる。触覚はこのボタンの押下だけ（自動変換では震えない）
+// VoiceOver には 1 要素「変換」として見せる。触覚はこのボタンの押下だけ(自動変換では震えない)
 struct TileConvertButton: View {
     static let regularTileSize: CGFloat = 60
     // 横長でキーボード表示中など、高さが足りないとき。押しやすさの下限 44pt を保つ
@@ -64,7 +64,7 @@ private struct ConvertTile: View {
 
 private extension ConvertTile {
     // 画像はパッケージ資源の素の PNG。Image(_:bundle:) はアセットカタログしか探さないので、プラットフォームの画像として読む
-    // 資源が無いとき（同梱漏れ）は、リリースでは筆文字なしの白いタイルのまま押せるようにし、デバッグでは止めて気づかせる
+    // 資源が無いとき(同梱漏れ)は、リリースでは筆文字なしの白いタイルのまま押せるようにし、デバッグでは止めて気づかせる
     var glyph: Image {
         #if os(iOS)
         guard let image = UIImage(named: "ConvertTile", in: .module, with: nil) else {

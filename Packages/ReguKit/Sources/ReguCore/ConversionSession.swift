@@ -46,9 +46,9 @@ public final class ConversionSession {
         store.select(presetID)
     }
 
-    // 自分が書き込んだ内容と、読み込みを試みた内容（拒否された場合を含む）は再び読まない。
+    // 自分が書き込んだ内容と、読み込みを試みた内容(拒否された場合を含む)は再び読まない。
     // 記録は UserDefaults に残し、再起動後も自分の出力を再変換しない。
-    // 書き込み直後の changeCount は古い値のことがある（iOS で確認）ため、中身の指紋でも自分の出力かを判定する。
+    // 書き込み直後の changeCount は古い値のことがある(iOS で確認)ため、中身の指紋でも自分の出力かを判定する。
     // 指紋には変換設定も含め、設定を変えた後は同じ文字列でも変換する
     public func activate(from source: ActivationSource) {
         guard source != .inactive else {
@@ -82,7 +82,7 @@ public final class ConversionSession {
         hasUnconfirmedWrite = false
     }
 
-    // 空白だけの入力では何もしない（クリップボードも書かない）
+    // 空白だけの入力では何もしない(クリップボードも書かない)
     public func convertTapped() {
         guard !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return

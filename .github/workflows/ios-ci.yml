@@ -1,8 +1,8 @@
 name: iOS CI
 
-# git に入っている状態だけから Release ビルドが通るかを見る（écritu の iOS CI に倣う）。
-# 拾いたいのは手元では気づけない失敗（pbxproj の登録漏れ・コミットし忘れ・新しい clone だけで壊れる設定・Release だけのコンパイラ異常終了）。
-# 変換エンジンの単体テスト（swift test）は辞書などの前提が無く数秒で終わるので、ここでも回す。UI テストは手元で回す
+# git に入っている状態だけから Release ビルドが通るかを見る(écritu の iOS CI に倣う)。
+# 拾いたいのは手元では気づけない失敗(pbxproj の登録漏れ・コミットし忘れ・新しい clone だけで壊れる設定・Release だけのコンパイラ異常終了)。
+# 変換エンジンの単体テスト(swift test)は辞書などの前提が無く数秒で終わるので、ここでも回す。UI テストは手元で回す
 on:
   push:
     branches:
@@ -15,13 +15,13 @@ permissions:
 
 jobs:
   release-build:
-    # macos-26 には Xcode 26 しか無い。Xcode 27 は専用イメージ（公開プレビュー）にある
+    # macos-26 には Xcode 26 しか無い。Xcode 27 は専用イメージ(公開プレビュー)にある
     runs-on: xcode-27
     timeout-minutes: 30
 
     steps:
       - name: Checkout
-        # タグは動かせるのでコミットで固定する（v4.4.0。écritu と同じ）
+        # タグは動かせるのでコミットで固定する(v4.4.0。écritu と同じ)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
       # 手元と同じ 27.1 に固定する

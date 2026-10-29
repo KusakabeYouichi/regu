@@ -5,7 +5,7 @@ import SwiftUI
 @main
 struct ReguApp: App {
     @Environment(\.scenePhase) private var scenePhase
-    // 複数ウィンドウは無効（UIApplicationSupportsMultipleScenes = NO）なので、状態は 1 つだけ持つ
+    // 複数ウィンドウは無効(UIApplicationSupportsMultipleScenes = NO)なので、状態は 1 つだけ持つ
     @State private var session: ConversionSession
     @State private var hasActivated = false
     @State private var wasInBackground = false
@@ -50,7 +50,7 @@ struct ReguApp: App {
     }
 
     #if DEBUG
-    // UI テスト（reguUITests）用。起動引数 -reguUITestReset があれば、セッションを作る前にアプリの UserDefaults を消す
+    // UI テスト(reguUITests)用。起動引数 -reguUITestReset があれば、セッションを作る前にアプリの UserDefaults を消す
     private static func resetDefaultsForUITestIfRequested() {
         guard ProcessInfo.processInfo.arguments.contains("-reguUITestReset"),
                 let domain = Bundle.main.bundleIdentifier else {

@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import ReguCore
 
-// c01-tests.md の T（偽のクリップボードで確かめる）
+// c01-tests.md の T(偽のクリップボードで確かめる)
 @Suite("ConversionSession")
 @MainActor
 struct ConversionSessionTests {

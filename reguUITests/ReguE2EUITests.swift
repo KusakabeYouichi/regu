@@ -1,18 +1,20 @@
 import XCTest
 
-// E2E 計画（c01-e2e-plan.md）の E1–E9 を XCUITest で行う。
-// クリップボードはテストランナーから UIPasteboard.general で読み書きする（simctl pbcopy の代わり）。
+// E2E 計画(c01-e2e-plan.md)の E1–E9 を XCUITest で行う。
+// クリップボードはテストランナーから UIPasteboard.general で読み書きする(simctl pbcopy の代わり)。
 // 各テストは -reguUITestReset 付きの起動から始め、前のテストの状態に依存しない。
-// E11〜E14 は c02（メイン画面の刷新）で足した「コピーしました」の表示・横長の配置・プリセットのチップ
+// E11〜E14 は c02(メイン画面の刷新)で足した「コピーしました」の表示・横長の配置・プリセットのチップ
+// E15 は c03(ビルトインの別名)
 @MainActor
 final class ReguE2EUITests: XCTestCase {
     private static let allowPasteLabels = ["ペーストを許可", "Allow Paste"]
     private static let e1Input = "ＡＢＣ１２３　ｶﾀｶﾅ「x」㎜"
     private static let e1Output = "ABC123 カタカナ『x』mm"
     // チップの幅に必ず収まらない長さのユーザープリセット名
-    private static let longPresetName = "ふりがな用（銀行・カード会社・証券口座）"
+    private static let longPresetName = "ふりがな用(銀行・カード会社・証券口座)"
+    private static let regularisationRow = "presetRow.6F1C2A10-0000-4000-8000-000000000001"
 
-    // MARK: - E1–E7, E9（iPhone）
+    // MARK: - E1–E7, E9(iPhone)
 
     func testE1_LaunchConvertsClipboardWithDefaultPreset() throws {
         try requireIdiom(.phone)
@@ -131,8 +133,8 @@ final class ReguE2EUITests: XCTestCase {
         output.press(forDuration: 1.2)
         let copy = menuItem(["コピー", "Copy"], app: app)
         XCTAssertTrue(copy.waitForExistence(timeout: 5), "結果欄の長押しでコピーが出ない")
-        XCTAssertFalse(menuItem(["カット", "Cut"], app: app).exists, "結果欄にカットが出た（編集可能）")
-        XCTAssertFalse(menuItem(["ペースト", "Paste"], app: app).exists, "結果欄にペーストが出た（編集可能）")
+        XCTAssertFalse(menuItem(["カット", "Cut"], app: app).exists, "結果欄にカットが出た(編集可能)")
+        XCTAssertFalse(menuItem(["ペースト", "Paste"], app: app).exists, "結果欄にペーストが出た(編集可能)")
         capture("E7-iphone-long-press-menu")
         attachText("E7-iphone-hierarchy", app.debugDescription)
 
@@ -197,7 +199,7 @@ final class ReguE2EUITests: XCTestCase {
         app.buttons["convertButton"].tap()
         XCTAssertTrue(badge.waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
 
-        // 表示中に押し直す。数え直さなければ、1 度目の表示から 1.5 秒（2 度目の押下からはそれより短い時間）で消える。
+        // 表示中に押し直す。数え直さなければ、1 度目の表示から 1.5 秒(2 度目の押下からはそれより短い時間)で消える。
         // 1 度目の表示の時刻は検出の遅れで正確に取れないため、待たずに押し直し、2 度目の押下からの経過だけを見る
         XCTAssertTrue(badge.exists, "2 度目を押す前に「コピーしました」が消えた")
         let secondTap = Date()
@@ -273,7 +275,52 @@ final class ReguE2EUITests: XCTestCase {
         capture("E13-iphone-long-user-preset")
     }
 
-    // MARK: - E8（iPad）
+    // ビルトインに別名を付けるとチップ・メニュー・一覧に出て、消すと元の名前に戻る。
+    // 縮小・省略そのものは XCUITest から見えない(label は全文のまま)ので、表示文字列と同じ行の開き直しで確かめる
+    func testE15_BuiltInAliasIsShownAndCanBeRemoved() throws {
+        try requireIdiom(.phone)
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+
+        app.buttons["settingsButton"].tap()
+        openPresetRow(Self.regularisationRow, app: app)
+        let aliasField = app.textFields["presetAliasField"]
+        XCTAssertTrue(aliasField.waitForExistence(timeout: 5), "ビルトインの編集画面に別名の欄が無い")
+        XCTAssertTrue(app.staticTexts["régularisation"].exists, "編集画面に本当の名前が無い")
+        aliasField.tap()
+        aliasField.typeText("正規化(ふつう)")
+        capture("E15-iphone-alias-editor")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.staticTexts["régularisation - 正規化(ふつう)"].waitForExistence(timeout: 5), "一覧に「本当の名前 - 別名」が出ない")
+        capture("E15-iphone-alias-list")
+        app.buttons["closePresetsButton"].tap()
+
+        assertSelectedPreset("正規化(ふつう)", app: app)
+        selectPreset("正規化(ふつう)", app: app)
+        capture("E15-iphone-alias-chip")
+
+        app.buttons["settingsButton"].tap()
+        openPresetRow(Self.regularisationRow, app: app)
+        XCTAssertTrue(aliasField.waitForExistence(timeout: 5))
+        XCTAssertEqual(aliasField.value as? String, "正規化(ふつう)")
+        // 別名の欄は右寄せなので、タップ位置しだいでカーソルが末尾に来ない。全選択してから消す
+        aliasField.tap()
+        aliasField.press(forDuration: 1.0)
+        let selectAll = menuItem(["すべてを選択", "全選択", "Select All"], app: app)
+        XCTAssertTrue(selectAll.waitForExistence(timeout: 5), "別名の欄で全選択が出ない")
+        selectAll.tap()
+        aliasField.typeText(XCUIKeyboardKey.delete.rawValue)
+        XCTAssertNotEqual(aliasField.value as? String, "正規化(ふつう)", "別名の欄から別名が消えない")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.staticTexts["régularisation"].waitForExistence(timeout: 5), "別名を消しても一覧が元の名前に戻らない")
+        XCTAssertFalse(app.staticTexts["régularisation - 正規化(ふつう)"].exists, "別名を消しても一覧に別名が残っている")
+        app.buttons["closePresetsButton"].tap()
+
+        assertSelectedPreset("régularisation", app: app)
+        selectPreset("régularisation", app: app)
+    }
+
+    // MARK: - E8(iPad)
 
     func testE8_iPadLaunchConvertsClipboardInBothOrientations() throws {
         try requireIdiom(.pad)
@@ -295,7 +342,7 @@ final class ReguE2EUITests: XCTestCase {
         XCTAssertEqual(element("output", in: app).value as? String, Self.e1Output)
         capture("E8-ipad-landscape")
         element("input", in: app).tap()
-        // ソフトウェアキーボードが出ない環境（ハードウェアキーボード接続）では、この確認だけを最後に skip として残す
+        // ソフトウェアキーボードが出ない環境(ハードウェアキーボード接続)では、この確認だけを最後に skip として残す
         let keyboardShown = app.keyboards.firstMatch.waitForExistence(timeout: 5)
         if keyboardShown {
             XCTAssertTrue(app.buttons["convertButton"].isHittable, "横長・キーボード表示中に変換ボタンが押せない")
@@ -305,7 +352,7 @@ final class ReguE2EUITests: XCTestCase {
 
         XCTAssertEqual(readPasteboard(), Self.e1Output)
         if !keyboardShown {
-            throw XCTSkip("横長でソフトウェアキーボードが出なかったため、キーボード表示中の変換ボタンの確認は行っていない（ハードウェアキーボード接続の可能性）")
+            throw XCTSkip("横長でソフトウェアキーボードが出なかったため、キーボード表示中の変換ボタンの確認は行っていない(ハードウェアキーボード接続の可能性)")
         }
     }
 
@@ -334,7 +381,7 @@ final class ReguE2EUITests: XCTestCase {
         XCTAssertTrue(app.wait(for: .runningForeground, timeout: 10))
     }
 
-    // 起動直後に、ペースト許可アラートが出る（押して true）か、結果欄に値が入る（false）まで待つ
+    // 起動直後に、ペースト許可アラートが出る(押して true)か、結果欄に値が入る(false)まで待つ
     @discardableResult
     private func allowPasteOrWaitForOutput(app: XCUIApplication, timeout: TimeInterval = 10) -> Bool {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
@@ -417,7 +464,14 @@ final class ReguE2EUITests: XCTestCase {
         assertSelectedPreset(name, app: app)
     }
 
-    // 右下を押してカーソルを末尾に置き、既存の文字を消してから打つ（中央を押すと先頭にカーソルが来ることがある）
+    // 歯車画面(プリセット一覧)が出ている前提。名前に依存せず、行の識別子で編集画面を開く
+    private func openPresetRow(_ identifier: String, app: XCUIApplication) {
+        let row = element(identifier, in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "一覧に \(identifier) の行が無い")
+        row.tap()
+    }
+
+    // 右下を押してカーソルを末尾に置き、既存の文字を消してから打つ(中央を押すと先頭にカーソルが来ることがある)
     private func replaceText(of field: XCUIElement, with text: String) {
         field.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.9)).tap()
         let current = field.value as? String ?? ""
@@ -426,7 +480,7 @@ final class ReguE2EUITests: XCTestCase {
         XCTAssertEqual(field.value as? String, text)
     }
 
-    // 歯車画面（プリセット一覧）が出ている前提。追加 → 名前 → hiragana を swap → 一覧へ戻って閉じる
+    // 歯車画面(プリセット一覧)が出ている前提。追加 → 名前 → hiragana を swap → 一覧へ戻って閉じる
     private func createSwapPreset(named name: String, app: XCUIApplication) {
         app.buttons["addPresetButton"].tap()
         let nameField = app.textFields["presetNameField"]
@@ -445,7 +499,7 @@ final class ReguE2EUITests: XCTestCase {
         app.buttons["closePresetsButton"].tap()
     }
 
-    // 歯車画面（プリセット一覧）が出ている前提。追加 → 名前だけ付けて一覧へ戻って閉じる（設定は既定のまま）
+    // 歯車画面(プリセット一覧)が出ている前提。追加 → 名前だけ付けて一覧へ戻って閉じる(設定は既定のまま)
     private func createPreset(named name: String, app: XCUIApplication) {
         app.buttons["addPresetButton"].tap()
         let nameField = app.textFields["presetNameField"]
@@ -475,10 +529,10 @@ final class ReguE2EUITests: XCTestCase {
         let predicate = NSPredicate(format: "value == %@", expected)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         let result = XCTWaiter.wait(for: [expectation], timeout: timeout)
-        XCTAssertEqual(result, .completed, "値が \(expected) にならない（実際: \(String(describing: element.value))）")
+        XCTAssertEqual(result, .completed, "値が \(expected) にならない(実際: \(String(describing: element.value)))")
     }
 
-    // プリセットのチップ（Menu）は label「プリセット」、value に選択中の名前を持つ
+    // プリセットのチップ(Menu)は label「プリセット」、value に選択中の名前を持つ
     private func assertSelectedPreset(_ name: String, app: XCUIApplication) {
         let picker = app.buttons["presetPicker"]
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
@@ -487,12 +541,12 @@ final class ReguE2EUITests: XCTestCase {
     }
 
     // チップは画面内で変換ボタンの左に収まり、変換ボタンは画面の中央にある。
-    // 文字の縮小・末尾の省略そのものは XCUITest からは見えない（label は全文のまま）ので、枠の位置だけを見る
+    // 文字の縮小・末尾の省略そのものは XCUITest からは見えない(label は全文のまま)ので、枠の位置だけを見る
     private func assertChipBesideCenteredConvertButton(app: XCUIApplication) {
         let chip = app.buttons["presetPicker"].frame
         let convert = app.buttons["convertButton"].frame
         let window = app.windows.firstMatch.frame
-        XCTAssertTrue(window.contains(chip), "チップが画面外にはみ出している（\(chip)）")
+        XCTAssertTrue(window.contains(chip), "チップが画面外にはみ出している(\(chip))")
         XCTAssertFalse(chip.intersects(convert), "チップが変換ボタンに重なっている")
         XCTAssertLessThanOrEqual(chip.maxX, convert.minX, "チップが変換ボタンの左にない")
         XCTAssertEqual(convert.midX, window.midX, accuracy: 1, "変換ボタンが中央にない")
@@ -507,10 +561,10 @@ final class ReguE2EUITests: XCTestCase {
             return window.frame.width > window.frame.height
         }
         let expectation = XCTNSPredicateExpectation(predicate: isLandscape, object: app.windows.firstMatch)
-        XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .completed, "横長に回っていない（\(app.windows.firstMatch.frame)）")
+        XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .completed, "横長に回っていない(\(app.windows.firstMatch.frame))")
     }
 
-    // コピーしていないときは「コピーしました」が出ない（出るなら前面化の直後なので、その間だけ見張る）
+    // コピーしていないときは「コピーしました」が出ない(出るなら前面化の直後なので、その間だけ見張る)
     private func assertCopiedBadgeDoesNotAppear(app: XCUIApplication) {
         XCTAssertFalse(element("copiedBadge", in: app).waitForExistence(timeout: 2), "コピーしていないのに「コピーしました」が出た")
     }
@@ -521,7 +575,7 @@ final class ReguE2EUITests: XCTestCase {
         XCTAssertTrue(app.buttons["convertButton"].isHittable, "キーボード表示中に変換ボタンが押せない")
     }
 
-    // 歯車画面で既定プリセットを開き、名前欄が無く設定の Picker が無効であること・削除の操作が無いことを確かめて一覧に戻る
+    // 歯車画面でビルトインのプリセットを開き、名前欄が無く設定の Picker が無効であること・削除の操作が無いことを確かめて一覧に戻る
     private func assertBuiltInPresetIsReadOnly(_ name: String, app: XCUIApplication) {
         let row = app.collectionViews.staticTexts[name].firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
@@ -529,18 +583,18 @@ final class ReguE2EUITests: XCTestCase {
         row.tap()
         let hiragana = app.buttons["presetField.hiragana"].firstMatch
         XCTAssertTrue(hiragana.waitForExistence(timeout: 5))
-        XCTAssertFalse(hiragana.isEnabled, "既定プリセットの設定が編集できる")
-        XCTAssertFalse(app.textFields["presetNameField"].exists, "既定プリセットの名前が編集できる")
+        XCTAssertFalse(hiragana.isEnabled, "ビルトインのプリセットの設定が編集できる")
+        XCTAssertFalse(app.textFields["presetNameField"].exists, "ビルトインのプリセットの名前が編集できる")
         capture("E5-iphone-builtin-editor")
         app.navigationBars.buttons.element(boundBy: 0).tap()
 
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.press(forDuration: 1.2)
-        XCTAssertTrue(menuItem(["複製"], app: app).waitForExistence(timeout: 5), "既定プリセットのメニューに複製が無い")
-        XCTAssertFalse(menuItem(["削除", "Delete"], app: app).exists, "既定プリセットのメニューに削除がある")
+        XCTAssertTrue(menuItem(["複製"], app: app).waitForExistence(timeout: 5), "ビルトインのプリセットのメニューに複製が無い")
+        XCTAssertFalse(menuItem(["削除", "Delete"], app: app).exists, "ビルトインのプリセットのメニューに削除がある")
         capture("E5-iphone-builtin-context-menu")
         app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.97)).tap()
-        // 左スワイプ（削除）の有無は、払う操作が行のタップとして扱われ編集画面へ進むため見ない（既定の削除防止は単体テスト S5）
+        // 左スワイプ(削除)の有無は、払う操作が行のタップとして扱われ編集画面へ進むため見ない(ビルトインの削除防止は単体テスト S5)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["addPresetButton"].waitForExistence(timeout: 5), "一覧に戻っていない")
     }

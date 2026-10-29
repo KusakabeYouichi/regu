@@ -1,7 +1,7 @@
 import Testing
 @testable import ReguCore
 
-// c01-tests.md の A〜K（1 項目だけ設定し、他は preserve）
+// c01-tests.md の A〜K(1 項目だけ設定し、他は preserve)
 @Suite("Converter 単項目")
 struct ConverterSingleSettingTests {
     // MARK: - A alphabet
@@ -40,7 +40,7 @@ struct ConverterSingleSettingTests {
         #expect(converted(input, ConversionSettings(accent: .toNFD)) == scalars(expected))
     }
 
-    @Test("B3 NFC でも CJK 互換漢字（塚 U+FA10）は統合漢字に変えない")
+    @Test("B3 NFC でも CJK 互換漢字(塚 U+FA10)は統合漢字に変えない")
     func accentToNFCKeepsCompatibilityIdeograph() {
         #expect(converted("\u{FA10}", ConversionSettings(accent: .toNFC)) == scalars("\u{FA10}"))
     }
@@ -98,7 +98,7 @@ struct ConverterSingleSettingTests {
 
     // MARK: - E hiragana
 
-    @Test("E1 カタカナをひらがなにする（ヴ→ゔ を含む）")
+    @Test("E1 カタカナをひらがなにする(ヴ→ゔ を含む)")
     func katakanaToHiragana() {
         #expect(converted("カタカナヴ", ConversionSettings(hiragana: .katakanaToHiragana)) == scalars("かたかな\u{3094}"))
     }
@@ -120,7 +120,7 @@ struct ConverterSingleSettingTests {
 
     // MARK: - F symbol
 
-    @Test("F1 全角記号を ASCII にする（＼～ を含む）")
+    @Test("F1 全角記号を ASCII にする(＼～ を含む)")
     func symbolToASCII() {
         #expect(converted("！＃＄＼～（）", ConversionSettings(symbol: .toASCII)) == scalars("!#$\\~()"))
     }
@@ -235,7 +235,7 @@ struct ConverterSingleSettingTests {
         #expect(converted(input, ConversionSettings(urlEntity: .decode)) == scalars(input))
     }
 
-    @Test("J2b 塊の中の有効な列だけ戻し（大小文字とも）、無効なバイトは %XX のまま残す")
+    @Test("J2b 塊の中の有効な列だけ戻し(大小文字とも)、無効なバイトは %XX のまま残す")
     func urlDecodeMixedRun() {
         #expect(converted("%41%e6%a4%9c%E6%A4 %ZZ", ConversionSettings(urlEntity: .decode)) == scalars("A検%E6%A4 %ZZ"))
     }

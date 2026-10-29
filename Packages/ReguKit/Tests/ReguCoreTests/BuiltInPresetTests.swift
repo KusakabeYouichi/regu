@@ -1,7 +1,7 @@
 import Testing
 @testable import ReguCore
 
-// c01-tests.md の P（numbers のプリセットシートどおり。ruby héritée は決定7）
+// c01-tests.md の P(numbers のプリセットシートどおり。ruby héritée は決定7)
 @Suite("既定プリセット")
 struct BuiltInPresetTests {
     @Test("P1 régularisation は英数記号を ASCII、半角カナを全角、「」を『』、組文字を展開、NFC にする")

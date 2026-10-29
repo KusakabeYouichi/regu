@@ -1,8 +1,8 @@
 import Foundation
 
-// SI 単位の組文字（㎜ 等）↔ 英字表記。両方向で同じ表を使う
+// SI 単位の組文字(㎜ 等)↔ 英字表記。両方向で同じ表を使う
 enum UnitConversion {
-    // 組文字と SI 表記（べき乗は上付き）。非 SI（㏒ ㏑ ㏕ ㏏ ㏇ ㏋ 等）とカタカナ組文字は含めない
+    // 組文字と SI 表記(べき乗は上付き)。非 SI(㏒ ㏑ ㏕ ㏏ ㏇ ㏋ 等)とカタカナ組文字は含めない
     private static let table: [(ligature: Unicode.Scalar, si: String)] = [
         ("㎎", "mg"), ("㎏", "kg"), ("㎜", "mm"), ("㎝", "cm"), ("㎞", "km"),
         ("㎟", "mm²"), ("㎠", "cm²"), ("㎡", "m²"), ("㎢", "km²"),
@@ -22,7 +22,7 @@ enum UnitConversion {
         Dictionary(uniqueKeysWithValues: table.map { ($0.ligature, $0.si) })
     }()
 
-    // SI 表記（² ³ を 2 3 で書いたもの、μ をマイクロ記号 U+00B5 で書いたものも含む）→ 組文字。
+    // SI 表記(² ³ を 2 3 で書いたもの、μ をマイクロ記号 U+00B5 で書いたものも含む)→ 組文字。
     // 長い順に並べて最長一致にする
     private static let siCandidates: [(si: [Unicode.Scalar], ligature: Unicode.Scalar)] = {
         var candidates: [(si: [Unicode.Scalar], ligature: Unicode.Scalar)] = []
@@ -55,7 +55,7 @@ enum UnitConversion {
         }
     }
 
-    // 半角数字の直後（空白 0〜1 個を挟む）の単位だけを置き換える。後ろに英字が続くときは単位とみなさない
+    // 半角数字の直後(空白 0〜1 個を挟む)の単位だけを置き換える。後ろに英字が続くときは単位とみなさない
     private static func siToLigature(_ text: String) -> String {
         let scalars = Array(text.unicodeScalars)
         var result = String.UnicodeScalarView()

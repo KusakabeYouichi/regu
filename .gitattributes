@@ -1,6 +1,6 @@
-# Xcode はスキーム保存時に é を分解形や XML 実体参照（e&#x301; / &#xe9; 等）へ書き換え、差分ノイズを作る（écritu と同じ問題）。
+# Xcode はスキーム保存時に é を分解形や XML 実体参照(e&#x301; / &#xe9; 等)へ書き換え、差分ノイズを作る(écritu と同じ問題)。
 # clean フィルタで git から見える内容を NFC の é に正規化する。
-# フィルタ実体はローカル設定が必要（クローン後に 1 回。README 参照）:
+# フィルタ実体はローカル設定が必要(クローン後に 1 回。README 参照):
 #   git config filter.xcscheme-nfc.clean "perl -CSD -pe 's/(?:e&#x301;|e&#769;|&#x[eE]9;|&#233;|e\\x{301}|\xC3\xA9|\xE9)gu/\\x{E9}gu/g'"
 #   git config filter.xcscheme-nfc.smudge cat
 *.xcscheme filter=xcscheme-nfc

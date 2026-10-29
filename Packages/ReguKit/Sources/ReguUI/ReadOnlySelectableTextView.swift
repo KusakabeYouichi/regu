@@ -25,7 +25,7 @@ public struct ReadOnlySelectableTextView: UIViewRepresentable {
         textView.isSelectable = true
         textView.font = UIFont.preferredFont(forTextStyle: .body)
         textView.adjustsFontForContentSizeCategory = true
-        // カードの上に載せるので地は透過。余白は入力欄（TextEditor）と同じ既定値に揃え、選択色は朱
+        // カードの上に載せるので地は透過。余白は入力欄(TextEditor)と同じ既定値に揃え、選択色は朱
         textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         textView.textContainer.lineFragmentPadding = 5
@@ -50,7 +50,7 @@ public struct ReadOnlySelectableTextView: UIViewRepresentable {
 
     @MainActor
     public final class Coordinator {
-        // 0 は「要求なし」（ConversionSession の初期値）
+        // 0 は「要求なし」(ConversionSession の初期値)
         var requestedToken = 0
         private var appliedToken = 0
 
@@ -134,7 +134,7 @@ public struct ReadOnlySelectableTextView: NSViewRepresentable {
 
     @MainActor
     public final class Coordinator {
-        // 0 は「要求なし」（ConversionSession の初期値）
+        // 0 は「要求なし」(ConversionSession の初期値)
         var requestedToken = 0
         private var appliedToken = 0
 

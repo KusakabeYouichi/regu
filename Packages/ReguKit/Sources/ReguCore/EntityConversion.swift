@@ -4,7 +4,7 @@ import Foundation
 enum EntityConversion {
     // MARK: - HTML
 
-    // 1 パスで置き換える（&amp;lt; は &lt; になる）。未知の名前・無効な数値・; の無いものはそのまま
+    // 1 パスで置き換える(&amp;lt; は &lt; になる)。未知の名前・無効な数値・; の無いものはそのまま
     static func htmlDecode(_ text: String) -> String {
         let scalars = Array(text.unicodeScalars)
         var result = String.UnicodeScalarView()
@@ -44,7 +44,7 @@ enum EntityConversion {
         return (String(scalar), length)
     }
 
-    // &#0;・サロゲート・U+10FFFF 超は無効（Unicode.Scalar がサロゲートと範囲外を弾く）
+    // &#0;・サロゲート・U+10FFFF 超は無効(Unicode.Scalar がサロゲートと範囲外を弾く)
     private static func numericReference(_ digits: String) -> Unicode.Scalar? {
         let value: UInt32?
         if digits.hasPrefix("x") || digits.hasPrefix("X") {
@@ -166,7 +166,7 @@ enum EntityConversion {
         return (scalar, length)
     }
 
-    // 非 ASCII 文字だけを UTF-8 の %XX にする（URL の構造 :/?&= や空白は残す）
+    // 非 ASCII 文字だけを UTF-8 の %XX にする(URL の構造 :/?&= や空白は残す)
     static func urlEncode(_ text: String) -> String {
         var result = ""
         for scalar in text.unicodeScalars {

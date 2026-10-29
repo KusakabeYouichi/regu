@@ -1,7 +1,7 @@
 import ReguCore
 import SwiftUI
 
-// プリセットの一覧（sheet）。既定は閲覧と複製だけ、ユーザープリセットは追加・複製・削除できる
+// プリセットの一覧(sheet)。ビルトインは閲覧・別名の変更・複製だけ、ユーザープリセットは追加・複製・削除できる
 struct PresetListView: View {
     let store: PresetStore
     @Environment(\.dismiss) private var dismiss
@@ -10,12 +10,12 @@ struct PresetListView: View {
     var body: some View {
         NavigationStack(path: $path) {
             List {
-                Section("既定") {
+                Section("ビルトイン") {
                     ForEach(Preset.builtIns) { preset in
                         row(for: preset)
                     }
                 }
-                Section("ユーザー") {
+                Section("ユーザー設定") {
                     ForEach(store.userPresets) { preset in
                         row(for: preset)
                     }
@@ -53,8 +53,12 @@ struct PresetListView: View {
 
     private func row(for preset: Preset) -> some View {
         NavigationLink(value: preset.id) {
-            Text(preset.name)
+            Text(store.listName(for: preset))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .truncationMode(.tail)
         }
+        .accessibilityIdentifier("presetRow.\(preset.id.uuidString)")
         .swipeActions(edge: .leading) {
             Button("複製") {
                 duplicate(preset)

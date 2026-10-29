@@ -1,8 +1,8 @@
 import SwiftUI
 
-// 画面の色。アイコンの世界観（紙の白・墨・朱の点）に合わせ、ライト／ダークの組で持つ。
+// 画面の色。アイコンの世界観(紙の白・墨・朱の点)に合わせ、ライト／ダークの組で持つ。
 // 朱は文字にも使うため、カード地と背景の上で 4.5:1 以上になる値にしている
-// （ライト #CF2222: 白 5.38 / 紙 4.90、ダーク #FF6B63: カード 5.98 / 背景 6.72）
+// (ライト #CF2222: 白 5.38 / 紙 4.90、ダーク #FF6B63: カード 5.98 / 背景 6.72)
 enum Theme {
     static let paper = Color(platformColor: dynamic(light: 0xF6F4F0, dark: 0x121212))
     static let card = Color(platformColor: dynamic(light: 0xFFFFFF, dark: 0x1E1E1E))

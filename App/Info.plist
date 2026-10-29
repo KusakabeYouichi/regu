@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<!-- 複数ウィンドウは無効。INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES だと
-	     INFOPLIST_KEY_UIApplicationSupportsMultipleScenes = NO を指定しても true で生成される（Xcode 27.1 で確認）。
+	     INFOPLIST_KEY_UIApplicationSupportsMultipleScenes = NO を指定しても true で生成される(Xcode 27.1 で確認)。
 	     そのため生成を NO にし、ここに明示する -->
 	<key>UIApplicationSceneManifest</key>
 	<dict>

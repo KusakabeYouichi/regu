@@ -20,7 +20,7 @@
 
 - 検査対象:
   - `App/`
-  - `Packages/`（`Package.swift`、`Sources/`、`Tests/`）
+  - `Packages/`(`Package.swift`、`Sources/`、`Tests/`)
   - `reguUITests/`
   - `Config/`
   - `.github/`

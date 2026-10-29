@@ -1,17 +1,20 @@
 import Foundation
 import Observation
 
-// 既定 3 つ＋ユーザープリセットの一覧と、選択中のプリセットを UserDefaults に保存する
+// ビルトイン 3 つ＋ユーザープリセットの一覧と、選択中のプリセット、ビルトインの別名を UserDefaults に保存する
 @Observable
 @MainActor
 public final class PresetStore {
     enum Key {
         static let userPresets = "regu.userPresets"
         static let selectedPresetID = "regu.selectedPresetID"
+        static let builtInAliases = "regu.builtInAliases"
     }
 
     public private(set) var userPresets: [Preset]
     public private(set) var selectedPresetID: UUID
+    // ビルトインの別名。Preset の外に持ち、変換設定と指紋には入れない
+    private var builtInAliases: [UUID: String]
 
     @ObservationIgnored private let defaults: UserDefaults
 
@@ -26,6 +29,7 @@ public final class PresetStore {
         } else {
             selectedPresetID = Preset.regularisation.id
         }
+        builtInAliases = Self.loadBuiltInAliases(from: defaults)
     }
 
     public var presets: [Preset] {
@@ -48,6 +52,46 @@ public final class PresetStore {
         defaults.set(id.uuidString, forKey: Key.selectedPresetID)
     }
 
+    public func alias(for id: UUID) -> String? {
+        builtInAliases[id]
+    }
+
+    // ビルトイン以外には付けない。前後の空白を除き、空か本当の名前と同じなら別名を消す
+    public func setAlias(_ alias: String, for id: UUID) {
+        guard let builtIn = Preset.builtIns.first(where: { $0.id == id }) else {
+            return
+        }
+        let normalized = Self.normalizedAlias(alias, for: builtIn)
+        // 変わっていなければ保存も変更通知もしない(確定・フォーカス喪失・画面を閉じるで何度も呼ばれる)
+        guard normalized != builtInAliases[id] else {
+            return
+        }
+        builtInAliases[id] = normalized
+        saveBuiltInAliases()
+    }
+
+    // 前後の空白を除く。空か本当の名前と同じなら別名なし(保存時と読み込み時で同じ規則)
+    private static func normalizedAlias(_ alias: String, for builtIn: Preset) -> String? {
+        let trimmed = alias.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty || trimmed == builtIn.name ? nil : trimmed
+    }
+
+    // 選択リスト(チップとメニュー)用。別名があれば別名
+    public func displayName(for preset: Preset) -> String {
+        guard preset.isBuiltIn, let alias = alias(for: preset.id) else {
+            return preset.name
+        }
+        return alias
+    }
+
+    // 設定の一覧用。別名があれば本当の名前の後ろに「 - 別名」
+    public func listName(for preset: Preset) -> String {
+        guard preset.isBuiltIn, let alias = alias(for: preset.id) else {
+            return preset.name
+        }
+        return "\(preset.name) - \(alias)"
+    }
+
     @discardableResult
     public func add(name: String, settings: ConversionSettings = ConversionSettings()) -> Preset {
         let preset = Preset(name: name, settings: settings)
@@ -56,7 +100,7 @@ public final class PresetStore {
         return preset
     }
 
-    // 既定プリセットからも複製できる
+    // ビルトインのプリセットからも複製できる
     @discardableResult
     public func duplicate(_ id: UUID, name: String) -> Preset? {
         guard let source = preset(id: id) else {
@@ -65,7 +109,7 @@ public final class PresetStore {
         return add(name: name, settings: source.settings)
     }
 
-    // 既定プリセットは変更できない（以下 3 つとも userPresets だけを対象にする）
+    // ビルトインのプリセットは変更できない(以下 3 つとも userPresets だけを対象にする)
     public func rename(_ id: UUID, to name: String) {
         guard let index = userPresets.firstIndex(where: { $0.id == id }) else {
             return
@@ -99,6 +143,29 @@ public final class PresetStore {
             return
         }
         defaults.set(data, forKey: Key.userPresets)
+    }
+
+    private func saveBuiltInAliases() {
+        let stored = Dictionary(uniqueKeysWithValues: builtInAliases.map { ($0.key.uuidString, $0.value) })
+        defaults.set(stored, forKey: Key.builtInAliases)
+    }
+
+    // 型が違う・未知の ID の別名は捨て、残りは setAlias と同じ規則で整える
+    private static func loadBuiltInAliases(from defaults: UserDefaults) -> [UUID: String] {
+        guard let stored = defaults.dictionary(forKey: Key.builtInAliases) else {
+            return [:]
+        }
+        var aliases: [UUID: String] = [:]
+        for (key, value) in stored {
+            guard let id = UUID(uuidString: key),
+                    let builtIn = Preset.builtIns.first(where: { $0.id == id }),
+                    let alias = value as? String,
+                    let normalized = normalizedAlias(alias, for: builtIn) else {
+                continue
+            }
+            aliases[id] = normalized
+        }
+        return aliases
     }
 
     // 要素ごとに読み、読めなかった要素だけを捨てる
