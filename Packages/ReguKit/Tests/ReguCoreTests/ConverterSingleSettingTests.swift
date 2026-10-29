@@ -86,6 +86,13 @@ struct ConverterSingleSettingTests {
         #expect(converted("ガパヴーア", ConversionSettings(katakana: .toHalfwidth)) == scalars("ｶﾞﾊﾟｳﾞｰｱ"))
     }
 
+    @Test("D2b 分解済みの結合濁点・半濁点(NFD の形)も半角の ﾞ ﾟ にする")
+    func katakanaToHalfwidthHandlesCombiningMarks() {
+        #expect(converted("カ\u{3099}ハ\u{309A}", ConversionSettings(katakana: .toHalfwidth)) == scalars("ｶﾞﾊﾟ"))
+        // ひらがなや半角形の無いカナの後ろの結合記号は残す(正準等価を保つ)
+        #expect(converted("か\u{3099}ヰ\u{3099}", ConversionSettings(katakana: .toHalfwidth)) == scalars("か\u{3099}ヰ\u{3099}"))
+    }
+
     @Test("D3 半角形の無いカナは残し、0201 の記号は半角にする")
     func katakanaToHalfwidthKeepsLettersWithoutHalfwidthForm() {
         #expect(converted("ヵヶヮ「」。、・", ConversionSettings(katakana: .toHalfwidth)) == scalars("ヵヶヮ｢｣｡､･"))

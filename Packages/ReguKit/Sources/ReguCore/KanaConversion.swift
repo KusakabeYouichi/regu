@@ -53,7 +53,9 @@ enum KanaConversion {
         return composed.count == 1 ? composed.first : nil
     }
 
-    // ガ→ｶﾞ のように分解して半角にする。半角形の無い文字(ヮ ヵ ヶ ヰ ヱ ヸ ヹ 等)はそのまま
+    // ガ→ｶﾞ のように分解して半角にする。半角形の無い文字(ヮ ヵ ヶ ヰ ヱ ヸ ヹ 等)はそのまま。
+    // 実行順では NFD(後処理 2)の後に来るため、半角にしたカナの直後に残った結合濁点・半濁点(U+3099 / U+309A)は ﾞ ﾟ にする。
+    // ひらがな(か+U+3099)や半角形の無いカナ(ヰ+U+3099)の後ろの結合記号はそのまま残す
     static func toHalfwidthKatakana(_ text: String) -> String {
         var result = String.UnicodeScalarView()
         for scalar in text.unicodeScalars {
@@ -61,11 +63,23 @@ enum KanaConversion {
                 result.append(half)
             } else if let pair = decomposeVoiced(scalar) {
                 result.append(contentsOf: pair)
+            } else if scalar == combiningVoicedMark, followsHalfwidthKana(result) {
+                result.append(halfwidthVoicedMark)
+            } else if scalar == combiningSemiVoicedMark, followsHalfwidthKana(result) {
+                result.append(halfwidthSemiVoicedMark)
             } else {
                 result.append(scalar)
             }
         }
         return String(result)
+    }
+
+    // 直前に出した文字が半角カナ(ｦ-ﾝ U+FF66-FF9D)か
+    private static func followsHalfwidthKana(_ result: String.UnicodeScalarView) -> Bool {
+        guard let last = result.last else {
+            return false
+        }
+        return (0xFF66...0xFF9D).contains(last.value)
     }
 
     private static func decomposeVoiced(_ scalar: Unicode.Scalar) -> [Unicode.Scalar]? {

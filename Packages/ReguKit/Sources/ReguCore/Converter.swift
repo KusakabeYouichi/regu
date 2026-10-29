@@ -1,33 +1,66 @@
 import Foundation
 
-// 設定どおりに文字列を変換する。decode を先、encode を最後に置く
+// 設定どおりに文字列を変換する。実行順は numbers「実行順」シートの 3 段階:
+// Prétraitement(復号・正規化)を全部終えてから Traitement(文字種の変換)、それを全部終えてから Post-traitement(符号化・分解)。
+// 各段階の中は番号順。Traitement はシートの並び順(扱う文字が重ならないので結果は順に依存しない)
 public enum Converter {
     public static func convert(_ text: String, settings: ConversionSettings) -> String {
         var text = text
-        if settings.urlEntity == .decode {
-            text = EntityConversion.urlDecode(text)
-        }
+        // Prétraitement
+        // 1. HTML Entity → Code Point
         if settings.htmlEntity == .decode {
             text = EntityConversion.htmlDecode(text)
         }
-        text = convertAccent(text, settings.accent)
-        text = UnitConversion.convert(text, settings.unit)
-        text = mapScalars(text) { convertAlphabet($0, settings.alphabet) }
-        text = convertSymbol(text, settings.symbol)
-        text = convertSpace(text, settings.space)
+        // 2. URL Entity → Code Point
+        if settings.urlEntity == .decode {
+            text = EntityConversion.urlDecode(text)
+        }
+        // 3. ligature → SI
+        if settings.unit == .ligatureToSI {
+            text = UnitConversion.convert(text, .ligatureToSI)
+        }
+        // 4. JIS X 0201 → JIS X 0208(カナ)
         if settings.katakana == .toFullwidth {
             text = KanaConversion.toFullwidthKatakana(text)
         }
+        // 5. NFD → NFC
+        if settings.accent == .toNFC {
+            text = convertAccent(text, .toNFC)
+        }
+        // 6. MIME-decode(まだ無い機能)
+
+        // Traitement
+        // [ラテン] alphabet
+        text = mapScalars(text) { convertAlphabet($0, settings.alphabet) }
+        // [空白] space
+        text = convertSpace(text, settings.space)
+        // [仮名] hiragana
         text = mapScalars(text) { KanaConversion.convertHiragana($0, settings.hiragana) }
+        // [記号] symbol, guillemets
+        text = convertSymbol(text, settings.symbol)
+        text = mapScalars(text) { convertGuillemets($0, settings.guillemets) }
+
+        // Post-traitement
+        // 1. MIME-encode(まだ無い機能)
+        // 2. NFC → NFD
+        if settings.accent == .toNFD {
+            text = convertAccent(text, .toNFD)
+        }
+        // 3. JIS X 0208 → JIS X 0201(カナ)
         if settings.katakana == .toHalfwidth {
             text = KanaConversion.toHalfwidthKatakana(text)
         }
-        text = mapScalars(text) { convertGuillemets($0, settings.guillemets) }
-        if settings.htmlEntity == .encode {
-            text = EntityConversion.htmlEncode(text)
+        // 4. SI → ligature
+        if settings.unit == .siToLigature {
+            text = UnitConversion.convert(text, .siToLigature)
         }
+        // 5. Code Point → URL Entity
         if settings.urlEntity == .encode {
             text = EntityConversion.urlEncode(text)
+        }
+        // 6. Code Point → HTML Entity
+        if settings.htmlEntity == .encode {
+            text = EntityConversion.htmlEncode(text)
         }
         return text
     }
