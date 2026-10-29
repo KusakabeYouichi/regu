@@ -229,28 +229,48 @@ final class ReguE2EUITests: XCTestCase {
         capture("E14-iphone-after-return")
     }
 
-    // 横長でキーボードが出ていても、両カードと変換ボタンが見えて押せる
+    // 横長でキーボードが出ていても、両カードと中央の列(チップ・変換ボタン・設定)が見切れずに押せる
     func testE12_LandscapeKeepsCardsAndConvertButtonUsableWithKeyboard() throws {
+        try checkLandscapeWithKeyboard(extraArguments: [], captureName: "E12-iphone-landscape-keyboard")
+    }
+
+    // 文字サイズが大きくても、横長・キーボード表示中に中央の列が見切れない(キャプションが伸びても列が縮む)
+    func testE12b_LandscapeColumnFitsWithLargerTextAndKeyboard() throws {
+        try checkLandscapeWithKeyboard(
+            extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityL"],
+            captureName: "E12b-iphone-landscape-keyboard-large-text"
+        )
+    }
+
+    private func checkLandscapeWithKeyboard(extraArguments: [String], captureName: String) throws {
         try requireIdiom(.phone)
         addTeardownBlock {
             XCUIDevice.shared.orientation = .portrait
         }
         let app = XCUIApplication()
-        launchWithEmptyClipboard(app: app)
+        launchWithEmptyClipboard(app: app, extraArguments: extraArguments)
         XCUIDevice.shared.orientation = .landscapeLeft
         waitForLandscape(app: app)
 
         replaceText(of: element("input", in: app), with: "ｶﾅ")
-        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "キーボードが出ていない")
-        for identifier in ["input", "output", "convertButton"] {
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), "キーボードが出ていない")
+        capture(captureName)
+        for identifier in ["input", "output", "convertButton", "presetPicker", "settingsButton"] {
             XCTAssertTrue(element(identifier, in: app).isHittable, "横長・キーボード表示中に \(identifier) が押せない")
         }
-        capture("E12-iphone-landscape-keyboard")
+        // isHittable は一部が見切れていても真になるため、枠の全体が画面の内側・キーボードより上にあることを見る
+        let window = app.windows.firstMatch.frame
+        for identifier in ["presetPicker", "convertButton", "settingsButton"] {
+            let frame = element(identifier, in: app).frame
+            XCTAssertGreaterThanOrEqual(frame.minY, window.minY, "\(identifier) の上端が画面の外にある(\(frame))")
+            XCTAssertLessThanOrEqual(frame.maxY, keyboard.frame.minY, "\(identifier) の下端がキーボードに隠れている(\(frame)、キーボード \(keyboard.frame))")
+        }
 
         app.buttons["convertButton"].tap()
         XCTAssertTrue(element("copiedBadge", in: app).waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
         waitForValue("カナ", of: element("output", in: app))
-        capture("E12-iphone-landscape-after-convert")
+        capture("\(captureName)-after-convert")
         XCUIDevice.shared.orientation = .portrait
         XCTAssertEqual(readPasteboard(), "カナ")
     }
@@ -367,10 +387,10 @@ final class ReguE2EUITests: XCTestCase {
         attachText("paste-alert-on-launch", "alert shown = \(alertShown)")
     }
 
-    private func launchWithEmptyClipboard(app: XCUIApplication) {
+    private func launchWithEmptyClipboard(app: XCUIApplication, extraArguments: [String] = []) {
         app.terminate()
         UIPasteboard.general.items = []
-        app.launchArguments = ["-reguUITestReset"]
+        app.launchArguments = ["-reguUITestReset"] + extraArguments
         app.launch()
     }
 

@@ -10,8 +10,6 @@ public struct MainView: View {
     private static let headerSpacing: CGFloat = 12
     // 横長のときの中央の列の幅
     private static let controlColumnWidth: CGFloat = 150
-    // 中央の列がこの高さに満たないとき(横長でキーボード表示中など)は、タイルを縮めてキャプションを隠す
-    private static let regularColumnMinHeight: CGFloat = 200
 
     @Bindable private var session: ConversionSession
     @State private var isShowingPresets = false
@@ -19,7 +17,6 @@ public struct MainView: View {
     @State private var badgeHideTask: Task<Void, Never>?
     @FocusState private var isInputFocused: Bool
     @State private var isLandscape = false
-    @State private var controlColumnHeight: CGFloat = .infinity
     @Environment(\.scenePhase) private var scenePhase
 
     public init(session: ConversionSession) {
@@ -142,10 +139,22 @@ public struct MainView: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 
-    // 横長の中央の列。上からチップ・変換ボタン・設定。高さが足りなければ間を詰めタイルを小さくして、変換ボタンを必ず見せる(押せる大きさ 44pt は保つ)
+    // 横長の中央の列。上からチップ・変換ボタン・設定。
+    // 使える高さに収まらなければ(横長でキーボード表示中など)、間を詰めタイルを小さくしてキャプションを隠す(押せる大きさ 44pt は保つ)。
+    // 列自身の高さは中身に押し広げられるので測らず、ViewThatFits に使える高さで選ばせる
+    // (2 つは別の View なので、切り替わるとき開いていたメニューは閉じる)
     private var controlColumn: some View {
-        let isCompact = controlColumnHeight < Self.regularColumnMinHeight
-        return VStack(spacing: isCompact ? 4 : 12) {
+        ViewThatFits(in: .vertical) {
+            controlColumnContent(isCompact: false)
+            controlColumnContent(isCompact: true)
+        }
+        .frame(width: Self.controlColumnWidth)
+        .frame(maxHeight: .infinity)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+    }
+
+    private func controlColumnContent(isCompact: Bool) -> some View {
+        VStack(spacing: isCompact ? 4 : 12) {
             presetChip(height: 44)
             Spacer(minLength: 0)
             convertButton(
@@ -155,14 +164,6 @@ public struct MainView: View {
             Spacer(minLength: 0)
             settingsButton(size: 44)
         }
-        .frame(width: Self.controlColumnWidth)
-        .frame(maxHeight: .infinity)
-        .onGeometryChange(for: CGFloat.self) { proxy in
-            proxy.size.height
-        } action: { newValue in
-            controlColumnHeight = newValue
-        }
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 
     private func convertButton(tileSize: CGFloat, showsCaption: Bool) -> some View {
