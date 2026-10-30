@@ -397,6 +397,26 @@ final class ReguE2EUITests: XCTestCase {
         app.buttons["closePresetsButton"].tap()
     }
 
+    // 横長でキーボード表示中にプリセットのチップを押しても落ちず、メニューから選べる
+    // (キーボードが閉じて中央の列が詰めた形から戻る途中にメニューが開く)
+    func testE17_PresetMenuOpensInLandscapeWithKeyboard() throws {
+        try requireIdiom(.phone)
+        addTeardownBlock {
+            XCUIDevice.shared.orientation = .portrait
+        }
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+        XCUIDevice.shared.orientation = .landscapeLeft
+        waitForLandscape(app: app)
+        replaceText(of: element("input", in: app), with: "ｶﾅ")
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "キーボードが出ていない")
+
+        selectPreset("Adresse héritée", app: app)
+        XCTAssertEqual(app.state, .runningForeground, "チップを押した後にアプリが前面で動いていない")
+        capture("E17-iphone-landscape-after-menu")
+        selectPreset("régularisation", app: app)
+    }
+
     // MARK: - E8(iPad)
 
     func testE8_iPadLaunchConvertsClipboardInBothOrientations() throws {

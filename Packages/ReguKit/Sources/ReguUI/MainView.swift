@@ -10,6 +10,9 @@ public struct MainView: View {
     private static let headerSpacing: CGFloat = 12
     // 横長のときの中央の列の幅
     private static let controlColumnWidth: CGFloat = 150
+    // 画面に出ているキーボードの高さがこれを超えたら、キーボードが出ているとみなす
+    // (ハードウェアキーボードの候補バーだけのときは超えない)
+    private static let keyboardMinHeight: CGFloat = 100
 
     @Bindable private var session: ConversionSession
     @State private var isShowingPresets = false
@@ -17,6 +20,7 @@ public struct MainView: View {
     @State private var badgeHideTask: Task<Void, Never>?
     @FocusState private var isInputFocused: Bool
     @State private var isLandscape = false
+    @State private var keyboardHeight: CGFloat = 0
     @Environment(\.scenePhase) private var scenePhase
 
     public init(session: ConversionSession) {
@@ -47,6 +51,21 @@ public struct MainView: View {
                     isLandscape = newValue
                 }
         }
+        #if os(iOS)
+        // 下へ払って閉じたときも willHide が来る。ハードウェアキーボードでは枠を画面の外に置いて通知することがあるので、
+        // 画面に出ている分の高さだけを見る
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { notification in
+            guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+                    let screen = notification.object as? UIScreen else {
+                keyboardHeight = 0
+                return
+            }
+            keyboardHeight = frame.intersection(screen.bounds).height
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            keyboardHeight = 0
+        }
+        #endif
         .background(Theme.paper)
         .tint(Theme.accent)
         .sheet(isPresented: $isShowingPresets) {
@@ -140,21 +159,13 @@ public struct MainView: View {
     }
 
     // 横長の中央の列。上からチップ・変換ボタン・設定。
-    // 使える高さに収まらなければ(横長でキーボード表示中など)、間を詰めタイルを小さくしてキャプションを隠す(押せる大きさ 44pt は保つ)。
-    // 列自身の高さは中身に押し広げられるので測らず、ViewThatFits に使える高さで選ばせる
-    // (2 つは別の View なので、切り替わるとき開いていたメニューは閉じる)
+    // キーボードが出ている間は、間を詰めタイルを小さくしてキャプションを隠す(押せる大きさ 44pt は保つ)。
+    // 形を替えるときも同じ View のまま大きさだけを変える。View を差し替えると、キーボードが閉じる途中に開いたメニューが
+    // 消えたボタンから開こうとしてアプリが落ちる(ViewThatFits で起きた)。
+    // 列や画面の高さは中身(文字サイズが大きいときのキャプション)に押し広げられるので、判定にはキーボードの通知を使う
     private var controlColumn: some View {
-        ViewThatFits(in: .vertical) {
-            controlColumnContent(isCompact: false)
-            controlColumnContent(isCompact: true)
-        }
-        .frame(width: Self.controlColumnWidth)
-        .frame(maxHeight: .infinity)
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-    }
-
-    private func controlColumnContent(isCompact: Bool) -> some View {
-        VStack(spacing: isCompact ? 4 : 12) {
+        let isCompact = keyboardHeight > Self.keyboardMinHeight
+        return VStack(spacing: isCompact ? 4 : 12) {
             presetChip(height: 44)
             Spacer(minLength: 0)
             convertButton(
@@ -164,6 +175,9 @@ public struct MainView: View {
             Spacer(minLength: 0)
             settingsButton(size: 44)
         }
+        .frame(width: Self.controlColumnWidth)
+        .frame(maxHeight: .infinity)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 
     private func convertButton(tileSize: CGFloat, showsCaption: Bool) -> some View {
