@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>régu ストア掲載プレビュー</title>
+<link rel="stylesheet" href="../site.css">
+<style>
+  .store-head { display: flex; gap: 20px; align-items: flex-start; margin: 1.5rem 0 1rem; }
+  .store-head img { width: 120px; height: 120px; border-radius: 27px; box-shadow: 0 2px 8px rgba(0, 0, 0, .12); flex: none; }
+  .store-head h1 { margin: 0; font-size: 1.9rem; line-height: 1.3; }
+  .store-head .sub { margin: .2rem 0 0; color: var(--muted); font-size: 1.05rem; }
+  .promo { border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent); border-radius: 12px; padding: .9rem 1.1rem; margin: 1rem 0 1.5rem; }
+  .gallery { display: flex; gap: 12px; overflow-x: auto; padding: 4px 0 12px; scroll-snap-type: x mandatory; }
+  .gallery figure { flex: 0 0 auto; margin: 0; scroll-snap-align: start; }
+  .gallery figure.iphone { width: min(62vw, 240px); }
+  .gallery figure.ipad { width: min(80vw, 360px); }
+  .gallery img { width: 100%; height: auto; border-radius: 18px; border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent); display: block; }
+  .gallery figcaption { font-size: .85rem; color: var(--muted); margin-top: .3rem; }
+  .desc h3 { margin: 1.3rem 0 .3rem; font-size: 1.05rem; }
+  .desc p { margin: .2rem 0; }
+  .meta { color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<header>régu</header>
+<main>
+  <p class="meta">App Store に載せる予定の文面と画像の確認用ページです(未公開)。文面は appstore/metadata.md から生成しています。</p>
+  <section lang="ja">
+  <div class="store-head">
+    <img src="icon.png" alt="">
+    <div>
+      <h1>régu</h1>
+      <p class="sub">コピーした文字を、いつもの形にそろえる</p>
+      <p class="meta">カテゴリ: ユーティリティ · 年齢: 4+ · 対応: iPhone / iPad · 価格: ¥50</p>
+    </div>
+  </div>
+  <h3>iPhone</h3><div class="gallery"><figure class="iphone"><img src="01-regularisation-iphone.png" alt="régularisation" width="1320" height="2868" loading="lazy"><figcaption>régularisation</figcaption></figure><figure class="iphone"><img src="02-adresse-iphone.png" alt="Adresse héritée" width="1320" height="2868" loading="lazy"><figcaption>Adresse héritée</figcaption></figure><figure class="iphone"><img src="03-ruby-iphone.png" alt="ruby héritée" width="1320" height="2868" loading="lazy"><figcaption>ruby héritée</figcaption></figure><figure class="iphone"><img src="04-presets-iphone.png" alt="プリセットの一覧" width="1320" height="2868" loading="lazy"><figcaption>プリセットの一覧</figcaption></figure><figure class="iphone"><img src="05-editor-iphone.png" alt="プリセットの設定" width="1320" height="2868" loading="lazy"><figcaption>プリセットの設定</figcaption></figure></div>
+  <h3>iPad</h3><div class="gallery"><figure class="ipad"><img src="01-regularisation-ipad.png" alt="régularisation" width="2064" height="2752" loading="lazy"><figcaption>régularisation</figcaption></figure><figure class="ipad"><img src="02-adresse-ipad.png" alt="Adresse héritée" width="2064" height="2752" loading="lazy"><figcaption>Adresse héritée</figcaption></figure><figure class="ipad"><img src="03-ruby-ipad.png" alt="ruby héritée" width="2064" height="2752" loading="lazy"><figcaption>ruby héritée</figcaption></figure><figure class="ipad"><img src="04-presets-ipad.png" alt="プリセットの一覧" width="2064" height="2752" loading="lazy"><figcaption>プリセットの一覧</figcaption></figure><figure class="ipad"><img src="05-editor-ipad.png" alt="プリセットの設定" width="2064" height="2752" loading="lazy"><figcaption>プリセットの設定</figcaption></figure></div>
+  <div class="promo">コピーして régu を開くだけ。全角の英数字、半角カナ、全角スペース、合成済みでないアクセント、㎏ のような単位記号を、選んだプリセットの規則でそろえ、結果をそのままクリップボードへ戻します。通信は一切しません。</div>
+  <div class="desc"><p>régu(レギュ)は、コピーした文字列を、あらかじめ決めた規則で一度にそろえるアプリです。</p><p>使い方は、文字列をコピーして régu を開くだけ。régu は前面に来るたびにクリップボードを読み、選んでいるプリセットで変換し、結果をクリップボードへ書き戻します。あとは元のアプリに戻って貼り付けるだけです。結果は全選択された状態で表示されるので、確かめてからコピーし直すこともできます。régu 自身が書き戻した文字列を、もう一度変換することはありません。</p><h3>変換できる 10 項目</h3><p>・英数字 — 全角 ⇄ 半角(ASCII)</p><p>・アクセント — 合成済み(NFC)⇄ 分解(NFD)</p><p>・空白 — 全角スペース ⇄ 半角スペース(1 個 / 2 個)</p><p>・カナ — 半角カナ ⇄ 全角カナ</p><p>・ひらがな — ひらがな ⇄ カタカナ、入れ替え</p><p>・記号 — 全角 ⇄ ASCII、Windows の文字コード(CP932)に合わせた変換</p><p>・鉤括弧 — 「」⇄『』</p><p>・単位 — ㎏ ㎝ ㎡ などの SI 単位の組文字 ⇄ kg cm m²</p><p>・HTML エンティティ — &amp;eacute; ⇄ é</p><p>・URL エンティティ — %C3%A9 ⇄ é</p><h3>3 つの既定のプリセット</h3><p>・régularisation — 全角の英数字・記号を半角に、半角カナを全角に、全角スペースを半角に、アクセントを合成済みに。ふだん使いの整形に。</p><p>・Adresse héritée — 英数字・記号・スペースを全角に、カナを半角に。全角しか受け付けない古い入力欄の住所に。</p><p>・ruby héritée — ひらがなを半角カタカナに。半角カナのふりがな欄に。</p><h3>自分のプリセット</h3><p>10 項目を組み合わせて、名前を付けたプリセットをいくつでも作れます。メイン画面のチップから、すぐに切り替えられます。</p><h3>通信しません</h3><p>régu にはネットワーク通信を行なうコードがありません。クリップボードの内容が端末の外へ送られることはありません。解析・広告の SDK も使っていません。</p><p>iPhone と iPad に対応しています。</p></div>
+  <h3>新機能</h3>
+  <p>初回リリースです。</p>
+  <h3>キーワード(検索用・ストアには表示されません)</h3>
+  <p class="meta">全角,半角,変換,クリップボード,コピペ,整形,カタカナ,ひらがな,住所,ふりがな,スペース,記号,単位,NFC,NFD,Unicode,HTML,URL,エンティティ</p>
+</section>
+  <hr>
+  <section lang="fr">
+  <div class="store-head">
+    <img src="icon.png" alt="">
+    <div>
+      <h1>régu</h1>
+      <p class="sub">Normaliser le texte copié</p>
+      <p class="meta">Catégorie : Utilitaires · Âge : 4+ · iPhone / iPad · Prix : 0,29 €</p>
+    </div>
+  </div>
+  <h3>iPhone</h3><div class="gallery"><figure class="iphone"><img src="01-regularisation-iphone.png" alt="régularisation" width="1320" height="2868" loading="lazy"><figcaption>régularisation</figcaption></figure><figure class="iphone"><img src="02-adresse-iphone.png" alt="Adresse héritée" width="1320" height="2868" loading="lazy"><figcaption>Adresse héritée</figcaption></figure><figure class="iphone"><img src="03-ruby-iphone.png" alt="ruby héritée" width="1320" height="2868" loading="lazy"><figcaption>ruby héritée</figcaption></figure><figure class="iphone"><img src="04-presets-iphone.png" alt="Liste des préréglages" width="1320" height="2868" loading="lazy"><figcaption>Liste des préréglages</figcaption></figure><figure class="iphone"><img src="05-editor-iphone.png" alt="Réglages d’un préréglage" width="1320" height="2868" loading="lazy"><figcaption>Réglages d’un préréglage</figcaption></figure></div>
+  <h3>iPad</h3><div class="gallery"><figure class="ipad"><img src="01-regularisation-ipad.png" alt="régularisation" width="2064" height="2752" loading="lazy"><figcaption>régularisation</figcaption></figure><figure class="ipad"><img src="02-adresse-ipad.png" alt="Adresse héritée" width="2064" height="2752" loading="lazy"><figcaption>Adresse héritée</figcaption></figure><figure class="ipad"><img src="03-ruby-ipad.png" alt="ruby héritée" width="2064" height="2752" loading="lazy"><figcaption>ruby héritée</figcaption></figure><figure class="ipad"><img src="04-presets-ipad.png" alt="Liste des préréglages" width="2064" height="2752" loading="lazy"><figcaption>Liste des préréglages</figcaption></figure><figure class="ipad"><img src="05-editor-ipad.png" alt="Réglages d’un préréglage" width="2064" height="2752" loading="lazy"><figcaption>Réglages d’un préréglage</figcaption></figure></div>
+  <div class="promo">Copiez, ouvrez régu : pleine chasse, demi-chasse, espaces idéographiques, accents décomposés et unités sont normalisés, et le résultat revient au presse-papiers.</div>
+  <div class="desc"><p>régu remet en ordre, en une seule fois, le texte que vous avez copié, selon des règles choisies à l’avance.</p><p>Copiez un texte, puis ouvrez régu. À chaque passage au premier plan, régu lit le presse-papiers, le convertit avec le préréglage sélectionné et y replace le résultat. Il ne reste qu’à revenir dans l’app d’origine et à coller. Le résultat s’affiche entièrement sélectionné : vous pouvez le vérifier avant de le copier à nouveau. régu ne reconvertit jamais le texte qu’il vient lui-même d’écrire.</p><h3>10 conversions</h3><p>• Lettres et chiffres — pleine chasse ⇄ demi-chasse (ASCII)</p><p>• Accents — composés (NFC) ⇄ décomposés (NFD)</p><p>• Espaces — espace idéographique ⇄ espace (une ou deux)</p><p>• Kana — katakana demi-chasse ⇄ pleine chasse</p><p>• Hiragana — hiragana ⇄ katakana, ou permutation</p><p>• Symboles — pleine chasse ⇄ ASCII, ou selon le jeu de caractères Windows (CP932)</p><p>• Crochets japonais — 「」⇄『』</p><p>• Unités — symboles d’unités SI composés comme ㎏ ㎝ ㎡ ⇄ kg cm m²</p><p>• Entités HTML — &amp;eacute; ⇄ é</p><p>• Encodage URL — %C3%A9 ⇄ é</p><h3>Trois préréglages fournis</h3><p>• régularisation — lettres, chiffres et symboles en demi-chasse, kana en pleine chasse, espaces idéographiques en espaces, accents composés. Pour le nettoyage de tous les jours.</p><p>• Adresse héritée — lettres, chiffres, symboles et espaces en pleine chasse, kana en demi-chasse. Pour les anciens formulaires japonais qui n’acceptent que la pleine chasse.</p><p>• ruby héritée — hiragana en katakana demi-chasse. Pour les champs de lecture (furigana) en demi-chasse.</p><h3>Vos propres préréglages</h3><p>Combinez les 10 conversions et créez autant de préréglages nommés que vous le souhaitez. Changez-en d’un geste depuis l’écran principal.</p><h3>Aucune connexion réseau</h3><p>régu ne contient aucun code réseau. Le contenu du presse-papiers ne quitte jamais votre appareil. Aucun SDK d’analyse ni de publicité.</p><p>Pour iPhone et iPad.</p></div>
+  <h3>Nouveautés</h3>
+  <p>Première version.</p>
+  <h3>Mots-clés (pour la recherche, non affichés)</h3>
+  <p class="meta">japonais,pleine chasse,demi-chasse,presse-papiers,katakana,hiragana,Unicode,NFC,NFD,HTML,URL,entité</p>
+</section>
+</main>
+</body>
+</html>
