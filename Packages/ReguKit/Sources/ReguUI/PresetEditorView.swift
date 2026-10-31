@@ -40,7 +40,7 @@ struct PresetEditorView: View {
                             }
                             .onDisappear(perform: commitAlias)
                     }
-                    Text("ビルトインのプリセットの変換設定は変更できません。alias は付けられます。一覧で複製すると設定を編集できます。")
+                    Text("ビルトインのプリセットの変換設定は変更できません。alias は付けられます。一覧で行を左へスワイプするか長押しすると複製でき、複製したものは設定を編集できます。")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 } else {
@@ -52,6 +52,13 @@ struct PresetEditorView: View {
                         .onChange(of: name) { _, newValue in
                             commitName(newValue)
                         }
+                    // 保存は止めずに知らせるだけ(1 文字ごとに保存するので、入力の途中で止めると邪魔になる)
+                    if store.hasOtherPreset(named: name, excluding: presetID) {
+                        Text("同じ名前のプリセットがあります")
+                            .font(.footnote)
+                            .foregroundStyle(Theme.accent)
+                            .accessibilityIdentifier("duplicateNameWarning")
+                    }
                 }
             }
             ForEach(SettingGroup.allCases) { group in

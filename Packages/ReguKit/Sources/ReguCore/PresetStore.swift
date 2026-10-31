@@ -100,13 +100,36 @@ public final class PresetStore {
         return preset
     }
 
-    // ビルトインのプリセットからも複製できる
+    // ビルトインのプリセットからも複製できる。名前は「元 copie」、埋まっていれば「元 copie 2」「元 copie 3」…
     @discardableResult
-    public func duplicate(_ id: UUID, name: String) -> Preset? {
+    public func duplicate(_ id: UUID) -> Preset? {
         guard let source = preset(id: id) else {
             return nil
         }
-        return add(name: name, settings: source.settings)
+        // 「xxx copie」「xxx copie 2」を複製しても「xxx copie copie」にせず、xxx の次の番号にする
+        let stripped = source.name.replacing(/\ copie( [0-9]+)?$/, with: "")
+        let base = stripped.isEmpty ? source.name : stripped
+        return add(name: unusedName(startingWith: "\(base) copie"), settings: source.settings)
+    }
+
+    // name が空いていればそのまま、埋まっていれば「name 2」「name 3」…の最初の空き。
+    // hasOtherPreset と同じく、ビルトインの別名も埋まっているとみなす(付けた直後に重なりを知らせないため)
+    public func unusedName(startingWith name: String) -> String {
+        let usedNames = Set(presets.flatMap { [$0.name, displayName(for: $0)] })
+        var candidate = name
+        var number = 2
+        while usedNames.contains(candidate) {
+            candidate = "\(name) \(number)"
+            number += 1
+        }
+        return candidate
+    }
+
+    // 名前の重なりを知らせるため。ビルトインは別名を付けていれば別名でも比べる(チップのメニューに出る名前)
+    public func hasOtherPreset(named name: String, excluding id: UUID) -> Bool {
+        presets.contains { preset in
+            preset.id != id && (preset.name == name || displayName(for: preset) == name)
+        }
     }
 
     // ビルトインのプリセットは変更できない(以下 3 つとも userPresets だけを対象にする)

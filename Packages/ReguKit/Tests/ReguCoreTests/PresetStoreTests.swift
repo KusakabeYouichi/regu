@@ -394,4 +394,118 @@ struct PresetStoreTests {
         #expect(store.presets.count == 4)
         #expect(store.preset(id: kept.id) != nil)
     }
+
+    @Test("D1 複製の名前は「元 copie」、2 回目からは「元 copie 2」「元 copie 3」")
+    func duplicateNamesAreNumbered() {
+        let store = PresetStore(defaults: defaults)
+
+        let first = store.duplicate(Preset.regularisation.id)
+        let second = store.duplicate(Preset.regularisation.id)
+        let third = store.duplicate(Preset.regularisation.id)
+
+        #expect(first?.name == "régularisation copie")
+        #expect(second?.name == "régularisation copie 2")
+        #expect(third?.name == "régularisation copie 3")
+        #expect(third?.settings == Preset.regularisation.settings)
+    }
+
+    @Test("D2 「copie」付きを複製しても「copie copie」にせず、元の名前の次の番号にする")
+    func duplicatingCopyContinuesNumbering() {
+        let store = PresetStore(defaults: defaults)
+        let first = store.duplicate(Preset.rubyHeritee.id)!
+        let second = store.duplicate(Preset.rubyHeritee.id)!
+
+        #expect(store.duplicate(first.id)?.name == "ruby héritée copie 3")
+        #expect(store.duplicate(second.id)?.name == "ruby héritée copie 4")
+    }
+
+    @Test("D3 消して空いた名前は使い直す")
+    func reusesFreedCopyName() {
+        let store = PresetStore(defaults: defaults)
+        let first = store.duplicate(Preset.adresseHeritee.id)!
+        store.duplicate(Preset.adresseHeritee.id)
+        store.delete(first.id)
+
+        #expect(store.duplicate(Preset.adresseHeritee.id)?.name == "Adresse héritée copie")
+    }
+
+    @Test("D4 名前の途中の copie や、copie の後が数字でないものは取り除かない")
+    func keepsCopieThatIsNotSuffix() {
+        let store = PresetStore(defaults: defaults)
+        let middle = store.add(name: "copie de Mail")
+        let word = store.add(name: "Mail copie A")
+
+        #expect(store.duplicate(middle.id)?.name == "copie de Mail copie")
+        #expect(store.duplicate(word.id)?.name == "Mail copie A copie")
+    }
+
+    @Test("D5 未知の ID では何も足さない")
+    func duplicateUnknownIDDoesNothing() {
+        let store = PresetStore(defaults: defaults)
+
+        #expect(store.duplicate(UUID()) == nil)
+        #expect(store.presets.count == 3)
+    }
+
+    @Test("U1 名前が空いていればそのまま、埋まっていれば「名前 2」「名前 3」…の最初の空き")
+    func unusedNameNumbersFromTwo() {
+        let store = PresetStore(defaults: defaults)
+
+        #expect(store.unusedName(startingWith: "新しいプリセット") == "新しいプリセット")
+        store.add(name: "新しいプリセット")
+        #expect(store.unusedName(startingWith: "新しいプリセット") == "新しいプリセット 2")
+        store.add(name: "新しいプリセット 2")
+        #expect(store.unusedName(startingWith: "新しいプリセット") == "新しいプリセット 3")
+        #expect(store.unusedName(startingWith: "régularisation") == "régularisation 2")
+    }
+
+    @Test("U2 番号付きの名前で追加したものも、その名前のままなら何も変えていないとして消える")
+    func numberedNewPresetIsDiscardedWhenUntouched() {
+        let store = PresetStore(defaults: defaults)
+        store.add(name: "新しいプリセット", settings: ConversionSettings(space: .spaceToIdeographic))
+        let numbered = store.add(name: store.unusedName(startingWith: "新しいプリセット"))
+
+        #expect(store.discardIfUntouched(numbered.id, defaultName: "新しいプリセット 2"))
+        #expect(store.presets.map(\.name) == ["régularisation", "Adresse héritée", "ruby héritée", "新しいプリセット"])
+    }
+
+    @Test("W1 自分以外に同じ名前があれば知らせ、自分だけなら知らせない")
+    func detectsOtherPresetWithSameName() {
+        let store = PresetStore(defaults: defaults)
+        let mail = store.add(name: "Mail")
+        let other = store.add(name: "Web")
+
+        #expect(!store.hasOtherPreset(named: "Mail", excluding: mail.id))
+        #expect(store.hasOtherPreset(named: "Mail", excluding: other.id))
+        #expect(store.hasOtherPreset(named: "régularisation", excluding: other.id))
+        #expect(!store.hasOtherPreset(named: "mail", excluding: other.id))
+    }
+
+    @Test("W2 ビルトインの別名とも比べる")
+    func detectsBuiltInAlias() {
+        let store = PresetStore(defaults: defaults)
+        store.setAlias("正規化", for: Preset.regularisation.id)
+        let user = store.add(name: "Mail")
+
+        #expect(store.hasOtherPreset(named: "正規化", excluding: user.id))
+        #expect(store.hasOtherPreset(named: "régularisation", excluding: user.id))
+    }
+
+    @Test("U3 ビルトインの別名と同じ名前は埋まっているとみなし、付けた直後に重なりを知らせない")
+    func unusedNameSkipsBuiltInAlias() {
+        let store = PresetStore(defaults: defaults)
+        store.setAlias("新しいプリセット", for: Preset.regularisation.id)
+        let preset = store.add(name: store.unusedName(startingWith: "新しいプリセット"))
+
+        #expect(preset.name == "新しいプリセット 2")
+        #expect(!store.hasOtherPreset(named: preset.name, excluding: preset.id))
+    }
+
+    @Test("D6 名前が「 copie」だけのものを複製しても、名前が空白で始まらない")
+    func duplicatingBareCopieKeepsName() {
+        let store = PresetStore(defaults: defaults)
+        let bare = store.add(name: " copie")
+
+        #expect(store.duplicate(bare.id)?.name == " copie copie")
+    }
 }

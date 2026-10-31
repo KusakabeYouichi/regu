@@ -8,8 +8,9 @@ struct PresetListView: View {
     let store: PresetStore
     @Environment(\.dismiss) private var dismiss
     @State private var path: [UUID] = []
-    // + で追加して編集中のプリセット。何も変えずに編集画面から離れたら追加しなかったことにする
+    // + で追加して編集中のプリセットと、付けた名前。何も変えずに編集画面から離れたら追加しなかったことにする
     @State private var newPresetID: UUID?
+    @State private var newPresetAssignedName = PresetListView.newPresetName
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -22,10 +23,6 @@ struct PresetListView: View {
                 Section {
                     ForEach(store.userPresets) { preset in
                         row(for: preset)
-                    }
-                    .onDelete { offsets in
-                        let ids = offsets.map { store.userPresets[$0].id }
-                        ids.forEach(store.delete)
                     }
                 } header: {
                     userPresetsHeader
@@ -60,8 +57,10 @@ struct PresetListView: View {
             Text("ユーザー設定")
             Spacer()
             Button {
-                let preset = store.add(name: Self.newPresetName)
+                // 既定の名前が埋まっていれば「新しいプリセット 2」…にする
+                let preset = store.add(name: store.unusedName(startingWith: Self.newPresetName))
                 newPresetID = preset.id
+                newPresetAssignedName = preset.name
                 path.append(preset.id)
             } label: {
                 Image(systemName: "plus")
@@ -78,7 +77,7 @@ struct PresetListView: View {
             return
         }
         newPresetID = nil
-        store.discardIfUntouched(id, defaultName: Self.newPresetName)
+        store.discardIfUntouched(id, defaultName: newPresetAssignedName)
     }
 
     private func row(for preset: Preset) -> some View {
@@ -89,7 +88,14 @@ struct PresetListView: View {
                 .truncationMode(.tail)
         }
         .accessibilityIdentifier("presetRow.\(preset.id.uuidString)")
-        .swipeActions(edge: .leading) {
+        // 行の操作は iOS の定番どおり左へのスワイプにまとめる(ユーザープリセットは削除も)。
+        // 払い切っただけで複製・削除しないよう、ボタンを押したときだけ実行する
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            if !preset.isBuiltIn {
+                Button("削除", role: .destructive) {
+                    store.delete(preset.id)
+                }
+            }
             Button("複製") {
                 duplicate(preset)
             }
@@ -107,7 +113,7 @@ struct PresetListView: View {
     }
 
     private func duplicate(_ preset: Preset) {
-        guard let copy = store.duplicate(preset.id, name: "\(preset.name) のコピー") else {
+        guard let copy = store.duplicate(preset.id) else {
             return
         }
         path.append(copy.id)

@@ -13,6 +13,7 @@ final class ReguE2EUITests: XCTestCase {
     // チップの幅に必ず収まらない長さのユーザープリセット名
     private static let longPresetName = "ふりがな用(銀行・カード会社・証券口座)"
     private static let regularisationRow = "presetRow.6F1C2A10-0000-4000-8000-000000000001"
+    private static let rubyHeriteeRow = "presetRow.6F1C2A10-0000-4000-8000-000000000003"
 
     // MARK: - E1–E7, E9(iPhone)
 
@@ -240,6 +241,55 @@ final class ReguE2EUITests: XCTestCase {
             extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityL"],
             captureName: "E12b-iphone-landscape-keyboard-large-text"
         )
+    }
+
+    // 一覧の行を左へ払うと「複製」が出て、複製は「元 copie」の名前で編集画面が開く。ほかと同じ名前にすると入力欄の下で知らせる。
+    // + は既定の名前が埋まっていれば「新しいプリセット 2」にする。ビルトインの注記は複製のしかたを教える
+    func testE18_DuplicateBySwipeAndNameConflicts() throws {
+        try requireIdiom(.phone)
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+        app.buttons["settingsButton"].tap()
+        let row = element(Self.regularisationRow, in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.swipeLeft()
+        let duplicateButton = app.buttons["複製"].firstMatch
+        XCTAssertTrue(duplicateButton.waitForExistence(timeout: 5), "左へ払っても複製が出ない")
+        capture("E18-iphone-swipe-duplicate")
+        duplicateButton.tap()
+
+        let nameField = app.textFields["presetNameField"]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 5), "複製の編集画面が開かない")
+        XCTAssertEqual(nameField.value as? String, "régularisation copie")
+        let warning = app.staticTexts["duplicateNameWarning"]
+        XCTAssertFalse(warning.exists, "重なっていないのに知らせている")
+        replaceText(of: nameField, with: "Adresse héritée")
+        XCTAssertTrue(warning.waitForExistence(timeout: 5), "ビルトインと同じ名前なのに知らせない")
+        capture("E18-iphone-duplicate-name-warning")
+        replaceText(of: nameField, with: "Mail")
+        XCTAssertFalse(warning.exists, "重なりを解いても知らせが消えない")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+
+        let addButton = app.buttons["addPresetButton"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5))
+        addButton.tap()
+        app.buttons["presetField.hiragana"].firstMatch.tap()
+        let swap = app.buttons["ひらがな↔カタカナ"].firstMatch
+        XCTAssertTrue(swap.waitForExistence(timeout: 5))
+        swap.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.staticTexts["新しいプリセット"].waitForExistence(timeout: 5), "設定を変えた新しいプリセットが残っていない")
+        addButton.tap()
+        XCTAssertTrue(nameField.waitForExistence(timeout: 5))
+        XCTAssertEqual(nameField.value as? String, "新しいプリセット 2")
+        XCTAssertFalse(warning.exists, "番号を振った名前なのに知らせている")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+
+        openPresetRow(Self.rubyHeriteeRow, app: app)
+        let note = app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "左へスワイプするか長押しすると複製でき")).firstMatch
+        XCTAssertTrue(note.waitForExistence(timeout: 5), "ビルトインの注記が複製のしかたを教えていない")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.buttons["closePresetsButton"].tap()
     }
 
     private func checkLandscapeWithKeyboard(extraArguments: [String], captureName: String) throws {
