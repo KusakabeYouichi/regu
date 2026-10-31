@@ -1,6 +1,6 @@
 # App Store 提出用メタデータ(régu)
 
-作成: 2026-10-30。文字数は 2026-10-30 に確認済み。
+作成: 2026-10-30。説明文・プロモーションテキストには ㎏ などの組文字を書けない(ASC が拒否する。2026-10-31)。文字数は 2026-10-30 に確認済み。
 ASC へは API で書き込む(値の正本はこのファイル)。
 
 ## 共通
@@ -29,7 +29,7 @@ régu
 
 ### プロモーションテキスト(170字以内)
 
-コピーして régu を開くだけ。全角の英数字、半角カナ、全角スペース、合成済みでないアクセント、㎏ のような単位記号を、選んだプリセットの規則でそろえ、結果をそのままクリップボードへ戻します。通信は一切しません。
+コピーして régu を開くだけ。全角の英数字、半角カナ、全角スペース、合成済みでないアクセント、1 文字にまとめた単位記号を、選んだプリセットの規則でそろえ、結果をそのままクリップボードへ戻します。通信は一切しません。
 
 ### キーワード(100字以内・半角カンマ区切り)
 
@@ -49,7 +49,7 @@ régu(レギュ)は、コピーした文字列を、あらかじめ決めた規�
 ・ひらがな — ひらがな ⇄ カタカナ、入れ替え
 ・記号 — 全角 ⇄ ASCII、Windows の文字コード(CP932)に合わせた変換
 ・鉤括弧 — 「」⇄『』
-・単位 — ㎏ ㎝ ㎡ などの SI 単位の組文字 ⇄ kg cm m²
+・単位 — kg や cm を 1 文字にまとめた組文字 ⇄ kg cm m² などの表記
 ・HTML エンティティ — &eacute; ⇄ é
 ・URL エンティティ — %C3%A9 ⇄ é
 
@@ -104,7 +104,7 @@ Copiez un texte, puis ouvrez régu. À chaque passage au premier plan, régu lit
 • Hiragana — hiragana ⇄ katakana, ou permutation
 • Symboles — pleine chasse ⇄ ASCII, ou selon le jeu de caractères Windows (CP932)
 • Crochets japonais — 「」⇄『』
-• Unités — symboles d’unités SI composés comme ㎏ ㎝ ㎡ ⇄ kg cm m²
+• Unités — symboles d’unités SI en un seul caractère ⇄ kg, cm, m², etc.
 • Entités HTML — &eacute; ⇄ é
 • Encodage URL — %C3%A9 ⇄ é
 
