@@ -25,11 +25,12 @@ public struct ReadOnlySelectableTextView: UIViewRepresentable {
         textView.isSelectable = true
         textView.font = UIFont.preferredFont(forTextStyle: .body)
         textView.adjustsFontForContentSizeCategory = true
-        // カードの上に載せるので地は透過。余白は入力欄(TextEditor)と同じ既定値に揃え、選択色は朱
+        // カードの上に載せるので地は透過。余白は入力欄(TextEditor)と同じ既定値に揃える。
+        // 選択の地は tintColor から作られるので、ハンドル・カーソルごと生成りの濃い色にする
         textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         textView.textContainer.lineFragmentPadding = 5
-        textView.tintColor = Theme.accentPlatformColor
+        textView.tintColor = Theme.selectionHighlightTintPlatformColor
         let coordinator = context.coordinator
         textView.onMoveToWindow = { [weak textView] in
             guard let textView else {
@@ -110,7 +111,7 @@ public struct ReadOnlySelectableTextView: NSViewRepresentable {
         textView.font = NSFont.preferredFont(forTextStyle: .body)
         textView.textContainerInset = NSSize(width: 0, height: 8)
         textView.textContainer?.lineFragmentPadding = 5
-        textView.selectedTextAttributes = [.backgroundColor: Theme.accentPlatformColor.withAlphaComponent(0.25)]
+        textView.selectedTextAttributes = [.backgroundColor: Theme.selectionPlatformColor]
         let coordinator = context.coordinator
         container.onMoveToWindow = { [weak textView] in
             guard let textView else {

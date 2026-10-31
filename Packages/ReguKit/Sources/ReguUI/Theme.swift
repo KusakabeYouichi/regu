@@ -2,13 +2,18 @@ import SwiftUI
 
 // 画面の色。アイコンの世界観(紙の白・墨・朱の点)に合わせ、ライト／ダークの組で持つ。
 // 朱は文字にも使うため、カード地と背景の上で 4.5:1 以上になる値にしている
-// (ライト #CF2222: 白 5.38 / 紙 4.90、ダーク #FF6B63: カード 5.98 / 背景 6.72)
+// (ロゴの朱。ライト #AD2533: 白 6.80 / 紙 6.19、ダーク #F0707E: カード 5.81 / 背景 6.53)
 enum Theme {
     static let paper = Color(platformColor: dynamic(light: 0xF6F4F0, dark: 0x121212))
     static let card = Color(platformColor: dynamic(light: 0xFFFFFF, dark: 0x1E1E1E))
     static let tileFace = Color(platformColor: dynamic(light: 0xFFFFFF, dark: 0xE8E6E2))
-    static let accentPlatformColor = dynamic(light: 0xCF2222, dark: 0xFF6B63)
+    static let accentPlatformColor = dynamic(light: 0xAD2533, dark: 0xF0707E)
     static let accent = Color(platformColor: accentPlatformColor)
+    // 結果欄の選択の地(生成り)。面が大きいので朱にせず、紙の色に寄せる。カードの上で #EAE0CF / #554C3F
+    static let selectionPlatformColor = dynamic(light: 0xEAE0CF, dark: 0x554C3F)
+    // iOS の結果欄の tintColor(ハンドル・カーソルの色)。iOS は選択の地をこの色にライト約 20%・ダーク約 35% の
+    // 不透明度を掛けて描くので、カードの上で selectionPlatformColor になる濃い色にしている
+    static let selectionHighlightTintPlatformColor = dynamic(light: 0x96640F, dark: 0xBBA17C)
     static let cardCornerRadius: CGFloat = 20
 }
 
