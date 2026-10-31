@@ -98,7 +98,7 @@ public struct MainView: View {
                 .focused($isInputFocused)
                 .overlay(alignment: .topLeading) {
                     if session.input.isEmpty {
-                        Text("ここにペースト")
+                        Text("ここにcoller")
                             .font(.body)
                             .foregroundStyle(.tertiary)
                             .padding(.top, 8)
