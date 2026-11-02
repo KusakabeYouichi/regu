@@ -4,6 +4,7 @@ import SwiftUI
 // プリセットの一覧(sheet)。ビルトインは閲覧・別名の変更・複製だけ、ユーザープリセットは追加・複製・削除できる
 struct PresetListView: View {
     private static let newPresetName = "新しいプリセット"
+    private static let manualURL = URL(string: "https://kusakabeyouichi.github.io/regu/manual/")!
 
     let store: PresetStore
     @Environment(\.dismiss) private var dismiss
@@ -26,6 +27,13 @@ struct PresetListView: View {
                     }
                 } header: {
                     userPresetsHeader
+                }
+                // 操作マニュアル(GitHub Pages)をブラウザで開く
+                Section {
+                    Link(destination: Self.manualURL) {
+                        Label("使い方(マニュアル)", systemImage: "book")
+                    }
+                    .accessibilityIdentifier("manualLink")
                 }
             }
             .navigationTitle("プリセット")

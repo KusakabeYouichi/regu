@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第4章 設定リファレンス — régu 操作マニュアル</title>
+<link rel="stylesheet" href="assets/manual.css">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="index.html">régu 操作マニュアル</a>
+  <nav class="crumbs"><a href="index.html">目次</a> › 第4章 設定リファレンス</nav>
+</header>
+<main>
+  <h1><span class="chapno">第4章</span>設定リファレンス</h1>
+  <p class="lede">プリセットの設定画面に並ぶ変換設定の全項目です。5 つのグループに 10 項目があり、どの項目にも「preserve」(変えない)があります。新しく作ったプリセットは、すべて preserve から始まります。</p>
+  <p>表記は設定画面のとおりです。例の「→」の左が変換前、右が変換後です。</p>
+
+  <h2 id="latin">latin</h2>
+  <h3 id="alphabet">alphabet</h3>
+  <p>英字と数字(A〜Z・a〜z・0〜9)の全角と半角(ASCII)を変えます。記号は変えません(記号は <a href="#symbol">symbole</a>)。</p>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>JIS X 0208 → ASCII</td><td>全角の英数字を半角に</td><td>ＡＢＣ１２３ → ABC123</td></tr>
+    <tr><td>ASCII → JIS X 0208</td><td>半角の英数字を全角に</td><td>ABC123 → ＡＢＣ１２３</td></tr>
+  </table>
+  </div>
+
+  <h3 id="accent">lettre accentuée</h3>
+  <p>アクセント付きの文字を、1 文字に合成した形(NFC)と、元の文字+アクセント記号に分けた形(NFD)の間で変えます。見た目は同じでも、検索や文字数の数え方が変わることがあります。CJK 互換漢字(U+F900〜FAFF、U+2F800〜2FA1F)を含む文字は変えません。</p>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>NFC → NFD</td><td>合成済みの文字を分解する</td><td>é(U+00E9)→ e + U+0301</td></tr>
+    <tr><td>NFD → NFC</td><td>分解された文字を合成する</td><td>e + U+0301 → é(U+00E9)</td></tr>
+  </table>
+  </div>
+
+  <h2 id="espace">espace</h2>
+  <h3 id="space">space</h3>
+  <p>全角スペース(U+3000)と半角スペース(U+0020)を変えます。</p>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th></tr>
+    <tr><td>preserve</td><td>変えない</td></tr>
+    <tr><td>U+3000 → U+0020</td><td>全角スペース 1 個を半角スペース 1 個に</td></tr>
+    <tr><td>U+3000 → U+0020 × 2</td><td>全角スペース 1 個を半角スペース 2 個に</td></tr>
+    <tr><td>U+0020 → U+3000</td><td>半角スペース 1 個を全角スペース 1 個に</td></tr>
+    <tr><td>U+0020 × 2 → U+3000</td><td>半角スペース 2 個を全角スペース 1 個に。左から 2 個ずつ置き換え、余った 1 個は半角のまま残す(半角 3 個 → 全角 1 個+半角 1 個)</td></tr>
+  </table>
+  </div>
+
+  <h2 id="kanas">les kanas</h2>
+  <h3 id="katakana">les katakana</h3>
+  <p>半角カナ(JIS X 0201)と全角カナ(JIS X 0208)を変えます。カナのほか、句読点・鉤括弧・中黒(。「」、・)、長音記号(ー)、濁点・半濁点(゛゜)も対象です。</p>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>JIS X 0201 → JIS X 0208</td><td>半角カナを全角に。後ろの濁点・半濁点と合わせて 1 文字にできるものは 1 文字にする</td><td>ｶﾞｯｺｳ → ガッコウ<br>ｳﾞ → ヴ<br>ｰ → ー<br>｢｣ → 「」</td></tr>
+    <tr><td>JIS X 0208 → JIS X 0201</td><td>全角カナを半角に。濁音・半濁音は文字と ﾞ ﾟ に分ける。半角の形が無い文字(ヮ ヵ ヶ ヰ ヱ など)はそのまま</td><td>ガッコウ → ｶﾞｯｺｳ<br>ー → ｰ<br>「」 → ｢｣</td></tr>
+  </table>
+  </div>
+
+  <h3 id="hiragana">les hiraganas</h3>
+  <p>ひらがなとカタカナ(全角)を変えます。長音記号(ー)、ヷ〜ヺ、半角カナは変えません。</p>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>カタカナ→ひらがな</td><td>カタカナをひらがなに</td><td>カタカナー → かたかなー</td></tr>
+    <tr><td>ひらがな→カタカナ</td><td>ひらがなをカタカナに</td><td>ひらがな → ヒラガナ</td></tr>
+    <tr><td>ひらがな↔カタカナ</td><td>ひらがなとカタカナを入れ替える</td><td>ひらカタ → ヒラかた</td></tr>
+  </table>
+  </div>
+
+  <h2 id="symbole">symbole</h2>
+  <h3 id="symbol">symbole</h3>
+  <p>全角の記号と ASCII の記号を変えます。英字・数字とスペースは変えません(英数字は <a href="#alphabet">alphabet</a>、スペースは <a href="#space">space</a>)。CP932(〜0x7f) の選択肢は、0x5C を ¥、0x7E を ‾ として扱う Windows の文字コードに合わせ、￥ と \、￣ と ~ を対応させます。</p>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>JIS X 0208 → ASCII</td><td>全角の記号を ASCII に</td><td>（！？） → (!?)<br>＼～ → \~</td></tr>
+    <tr><td>JIS X 0208 → CP932(〜0x7f)</td><td>上と同じに加えて、￥ を \ に、￣ を ~ に</td><td>￥￣ → \~</td></tr>
+    <tr><td>ASCII → JIS X 0208</td><td>ASCII の記号を全角に</td><td>(!?) → （！？）<br>\~ → ＼～</td></tr>
+    <tr><td>CP932(〜0x7f) → JIS X 0208</td><td>上と同じだが、\ を ￥ に、~ を ￣ にする</td><td>\~ → ￥￣</td></tr>
+  </table>
+  </div>
+
+  <h3 id="guillemets">guillemets</h3>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>「」→『』</td><td>かぎ括弧を二重かぎ括弧に</td><td>「予約」 → 『予約』</td></tr>
+    <tr><td>『』→「」</td><td>二重かぎ括弧をかぎ括弧に</td><td>『予約』 → 「予約」</td></tr>
+  </table>
+  </div>
+
+  <h3 id="unit">unit</h3>
+  <p>単位を 1 文字にまとめた組文字(㎏ ㎝ ㎡ など)と、英字の表記を変えます。対象は SI 単位などの組文字(㎎ ㎏ ㎜ ㎝ ㎞ ㎡ ㏄ ㎖ ㎐ ㎾ ㎃ ㎈ ㎳ ㍱ ㏈ ㎛ ㏖ など)です。㏒ ㏑ のような SI でない組文字と、㌔ のようなカタカナの組文字は変えません。</p>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>ligature → SI</td><td>組文字を英字の表記に。べき乗は上付き文字(² ³)にする</td><td>㎏ → kg<br>㎡ → m²<br>㏄ → cc</td></tr>
+    <tr><td>SI → ligature</td><td>英字の表記を組文字に。半角数字の直後(間に半角スペース 1 個までは可)にある単位だけを変える。後ろに英字が続くときは変えない。m2 のように 2 3 で書いたべき乗も対象</td><td>20kg → 20㎏<br>10 mm → 10 ㎜<br>5m2 → 5㎡<br>3kgs → 3kgs(変えない)</td></tr>
+  </table>
+  </div>
+
+  <h2 id="entity">Entity</h2>
+  <h3 id="html-entity">HTML Entity</h3>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>HTML Entity → Code Point</td><td>HTML の文字参照を文字に。名前(HTML 4.01 の 252 個と &amp;apos;)と、10 進・16 進の数値で書いたものが対象。1 回だけ置き換えるので、&amp;amp;lt; は &amp;lt; になる。知らない名前や ; の無いものはそのまま</td><td>&amp;lt;b&amp;gt; → &lt;b&gt;<br>&amp;eacute; → é<br>&amp;#233; → é<br>&amp;#xE9; → é</td></tr>
+    <tr><td>Code Point → HTML Entity</td><td>&amp; &lt; &gt; " ' の 5 文字だけを文字参照に。ほかの文字は変えない</td><td>&lt;a href="x"&gt; → &amp;lt;a href=&amp;quot;x&amp;quot;&amp;gt;</td></tr>
+  </table>
+  </div>
+
+  <h3 id="url-entity">URL entity</h3>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>選択肢</th><th>内容</th><th>例</th></tr>
+    <tr><td>preserve</td><td>変えない</td><td></td></tr>
+    <tr><td>URL Entity → Code Point</td><td>%XX の表記を UTF-8 として文字に戻す。UTF-8 として正しくない部分は %XX のまま残す。+ は空白にしない</td><td>%C3%A9 → é<br>a+b → a+b(変えない)</td></tr>
+    <tr><td>Code Point → URL Entity</td><td>ASCII 以外の文字だけを UTF-8 の %XX に。ASCII の文字(: / ? &amp; = や空白を含む)は変えない</td><td>café → caf%C3%A9</td></tr>
+  </table>
+  </div>
+
+  <h2 id="order">適用される順番</h2>
+  <p>1 つのプリセットの中の設定は、次の順番で適用されます。前の段階の結果に、次の段階の変換がかかります。</p>
+  <ol>
+    <li>前処理(文字参照を戻す・まとめる)
+      <ol>
+        <li>HTML Entity → Code Point</li>
+        <li>URL Entity → Code Point</li>
+        <li>ligature → SI</li>
+        <li>JIS X 0201 → JIS X 0208(les katakana)</li>
+        <li>NFD → NFC</li>
+      </ol>
+    </li>
+    <li>文字種の変換: alphabet、space、les hiraganas、symbole、guillemets</li>
+    <li>後処理(分ける・符号にする)
+      <ol>
+        <li>NFC → NFD</li>
+        <li>JIS X 0208 → JIS X 0201(les katakana)</li>
+        <li>SI → ligature</li>
+        <li>Code Point → URL Entity</li>
+        <li>Code Point → HTML Entity</li>
+      </ol>
+    </li>
+  </ol>
+  <p>たとえば ruby héritée(les hiraganas: ひらがな→カタカナ、les katakana: JIS X 0208 → JIS X 0201)では、ひらがながカタカナになってから半角になるので、「びびでぃばびでぃぶ」は「ﾋﾞﾋﾞﾃﾞｨﾊﾞﾋﾞﾃﾞｨﾌﾞ」になります。また、HTML Entity → Code Point と alphabet の JIS X 0208 → ASCII を組み合わせると、&amp;#xFF21;(全角の Ａ)は文字に戻ってから半角になり、「A」になります。</p>
+</main>
+<footer class="pager">
+  <a class="prev" href="presets.html">← 第3章 プリセット</a>
+  <a class="next" href="trouble.html">第5章 困ったとき →</a>
+</footer>
+</body>
+</html>

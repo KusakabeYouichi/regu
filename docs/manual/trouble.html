@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第5章 困ったとき — régu 操作マニュアル</title>
+<link rel="stylesheet" href="assets/manual.css">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="index.html">régu 操作マニュアル</a>
+  <nav class="crumbs"><a href="index.html">目次</a> › 第5章 困ったとき</nav>
+</header>
+<main>
+  <h1><span class="chapno">第5章</span>困ったとき</h1>
+  <p class="lede">よくある疑問と対処です。解決しないときは、<a href="index.html#contact">お問い合わせ</a>ください。</p>
+
+  <dl>
+    <dt id="paste">「ペーストを許可」と毎回出ます</dt>
+    <dd>régu はクリップボードを読んで変換するアプリなので、iOS が許可を求めることがあります。iOS の 設定 › アプリ › régu › 他のAppからペースト を「許可」にすると、毎回は出なくなります(<a href="basics.html#paste">第2章</a>)。</dd>
+
+    <dt id="not-converted">開いても変換されません</dt>
+    <dd>régu が自分で書き戻した文字列は、もう一度は変換しません。別の文字列をコピーし直してから開いてください。同じ文字列をもう一度変換したいときは、entrée で変換ボタンを押してください(<a href="basics.html#own-output">第2章</a>)。<br>
+    ほかに、クリップボードの中身が前に読んだときから変わっていないとき、「ペーストを許可」で許可しなかったときも、開き直すだけでは読みません。コントロールセンターなどを閉じて戻ったときも読みません。コピーし直してから開いてください。</dd>
+
+    <dt id="switch">プリセットを切り替えたのに結果が変わりません</dt>
+    <dd>プリセットを切り替えただけでは変換し直しません。変換ボタンを押してください(<a href="basics.html#convert">第2章</a>)。</dd>
+
+    <dt id="button">変換ボタンを押しても何も起きません</dt>
+    <dd>entrée が空か、空白・改行だけのときは変換しません。</dd>
+
+    <dt id="builtin">ビルトインのプリセットが編集できません</dt>
+    <dd>ビルトインのプリセット(régularisation / Adresse héritée / ruby héritée)は、変換設定を変更できず、削除もできません。付けられるのは alias だけです。設定を変えたいときは、プリセットの一覧で行を左へスワイプするか長押しして「複製」し、複製したほうを編集してください(<a href="presets.html#duplicate">第3章</a>)。</dd>
+
+    <dt id="new-missing">+ で作ったプリセットが一覧にありません</dt>
+    <dd>名前も変換設定も変えずに設定画面から戻ると、プリセットは追加されません。名前か変換設定を変えてから戻ってください(<a href="presets.html#new">第3章</a>)。</dd>
+
+    <dt id="same-name">「同じ名前のプリセットがあります」と出ます</dt>
+    <dd>ほかのプリセット(ビルトインの alias を含む)と同じ名前です。そのままでも保存されますが、チップのメニューで見分けにくくなるので、別の名前にすることをおすすめします。</dd>
+  </dl>
+</main>
+<footer class="pager">
+  <a class="prev" href="settings.html">← 第4章 設定リファレンス</a>
+  <a class="next" href="../privacy.html">付録 プライバシーポリシー →</a>
+</footer>
+</body>
+</html>

@@ -323,6 +323,24 @@ final class ReguE2EUITests: XCTestCase {
         app.buttons["closePresetsButton"].tap()
     }
 
+    // プリセット一覧のいちばん下に「使い方(マニュアル)」があり、押すと Safari でマニュアルが開く
+    func testE19_ManualLinkOpensSafari() throws {
+        try requireIdiom(.phone)
+        let app = XCUIApplication()
+        launchWithEmptyClipboard(app: app)
+        app.buttons["settingsButton"].tap()
+        let link = app.buttons["manualLink"]
+        XCTAssertTrue(link.waitForExistence(timeout: 5), "プリセット一覧に「使い方(マニュアル)」が無い")
+        XCTAssertEqual(link.label, "使い方(マニュアル)")
+        XCTAssertGreaterThan(link.frame.minY, app.buttons["addPresetButton"].frame.maxY, "「使い方(マニュアル)」がユーザー設定より上にある")
+        capture("E19-iphone-manual-link")
+
+        link.tap()
+        let safari = XCUIApplication(bundleIdentifier: "com.apple.mobilesafari")
+        XCTAssertTrue(safari.wait(for: .runningForeground, timeout: 15), "押しても Safari が開かない")
+        app.activate()
+    }
+
     private func checkLandscapeWithKeyboard(extraArguments: [String], captureName: String) throws {
         try requireIdiom(.phone)
         addTeardownBlock {

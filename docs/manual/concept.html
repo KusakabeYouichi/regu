@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第1章 régu とは — régu 操作マニュアル</title>
+<link rel="stylesheet" href="assets/manual.css">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="index.html">régu 操作マニュアル</a>
+  <nav class="crumbs"><a href="index.html">目次</a> › 第1章 régu とは</nav>
+</header>
+<main>
+  <h1><span class="chapno">第1章</span>régu とは</h1>
+  <p class="lede">régu は、コピーした文字列の表記を、あらかじめ決めた規則でそろえるアプリです。規則のまとまりを「プリセット」と呼びます。</p>
+
+  <h2 id="flow">コピーして開くだけ</h2>
+  <ol>
+    <li>他のアプリで文字列をコピーします。</li>
+    <li>régu を開きます。régu はクリップボードの文字列を読み、選んでいるプリセットで変換して、結果をクリップボードへ書き戻します。</li>
+    <li>元のアプリに戻って貼り付けます。</li>
+  </ol>
+  <p>régu の画面では、上の欄にコピーした文字列、下の欄に変換した結果が出ます。結果は全選択された状態で表示されるので、内容を確かめられます。</p>
+  <p>régu が自分で書き戻した文字列は、もう一度は変換しません。開き直すたびに同じ文字列が何度も変換されることはありません。</p>
+
+  <h2 id="what">何をそろえるか</h2>
+  <p>そろえられるのは、全角・半角の英数字と記号、半角カナ、全角スペース、アクセント付きの文字の合成・分解、ひらがな・カタカナ、鉤括弧、単位の組文字(㎏ など)、HTML の文字参照、URL の %XX 表記です。どれをどちらへそろえるかはプリセットごとに決めます。全項目は<a href="settings.html">第4章 設定リファレンス</a>をご覧ください。</p>
+  <p>はじめから 3 つのプリセット(régularisation / Adresse héritée / ruby héritée)が入っています。自分のプリセットを作ることもできます(<a href="presets.html">第3章</a>)。</p>
+
+  <h2 id="offline">通信しません</h2>
+  <p>régu には、ネットワーク通信を行なうコードがありません。クリップボードの内容が端末の外へ送られることはありません。プリセットの一覧にある「使い方(マニュアル)」は、このマニュアルをブラウザで開くだけです(régu 自身は通信しません)。詳しくは<a href="../privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+</main>
+<footer class="pager">
+  <a class="prev" href="index.html">← 目次</a>
+  <a class="next" href="basics.html">第2章 基本の使い方 →</a>
+</footer>
+</body>
+</html>

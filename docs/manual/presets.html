@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第3章 プリセット — régu 操作マニュアル</title>
+<link rel="stylesheet" href="assets/manual.css">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="index.html">régu 操作マニュアル</a>
+  <nav class="crumbs"><a href="index.html">目次</a> › 第3章 プリセット</nav>
+</header>
+<main>
+  <h1><span class="chapno">第3章</span>プリセット</h1>
+  <p class="lede">プリセットは、変換設定(<a href="settings.html">第4章</a>)の組み合わせに名前を付けたものです。はじめから入っている 3 つのビルトインと、自分で作るユーザー設定があります。</p>
+
+  <h2 id="builtin">ビルトインのプリセット</h2>
+  <p>ビルトインのプリセットは 3 つです。最初は régularisation が選ばれています。表にない項目は preserve(変えない)です。</p>
+  <div class="tablewrap">
+  <table class="spec">
+    <tr><th>プリセット</th><th>変換設定</th><th>何をするか</th></tr>
+    <tr><td>régularisation</td><td>alphabet: JIS X 0208 → ASCII<br>lettre accentuée: NFD → NFC<br>space: U+3000 → U+0020<br>les katakana: JIS X 0201 → JIS X 0208<br>symbole: JIS X 0208 → ASCII<br>guillemets: 「」→『』<br>unit: ligature → SI</td><td>全角の英数字・記号を半角に、半角カナを全角に、全角スペースを半角スペースに、アクセントを合成済みに、「」を『』に、単位の組文字を英字表記にします。</td></tr>
+    <tr><td>Adresse héritée</td><td>alphabet: ASCII → JIS X 0208<br>lettre accentuée: NFD → NFC<br>space: U+0020 → U+3000<br>les katakana: JIS X 0208 → JIS X 0201<br>symbole: ASCII → JIS X 0208</td><td>英数字・記号・スペースを全角に、カナを半角に、アクセントを合成済みにします。</td></tr>
+    <tr><td>ruby héritée</td><td>les katakana: JIS X 0208 → JIS X 0201<br>les hiraganas: ひらがな→カタカナ</td><td>ひらがなをカタカナにしてから、カナを半角にします。</td></tr>
+  </table>
+  </div>
+  <div class="shots">
+    <figure>
+      <img src="assets/02-adresse.png" alt="Adresse héritée で変換した画面。entrée の「練馬区時計坂3-3-9 一刻館5号室」が、résultat では数字・ハイフン・スペースが全角になっている" width="414" height="900">
+      <figcaption>Adresse héritée</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/03-ruby.png" alt="ruby héritée で変換した画面。entrée のひらがな「びびでぃばびでぃぶ」が、résultat では半角カタカナになっている" width="414" height="900">
+      <figcaption>ruby héritée</figcaption>
+    </figure>
+  </div>
+  <p>ビルトインのプリセットは、変換設定を変更できません。削除もできません。設定を変えて使いたいときは、<a href="#duplicate">複製</a>してください。</p>
+
+  <h2 id="switch">プリセットを切り替える</h2>
+  <p>メイン画面のプリセットのチップをタップするとメニューが開き、プリセットを選べます。メニューには、上にビルトイン、その下にユーザー設定のプリセットが並びます。選んだプリセットは、次に régu を開いたときも選ばれたままです。</p>
+  <p>切り替えただけでは変換し直しません。今の entrée を新しいプリセットで変換するときは、変換ボタンを押してください。</p>
+
+  <h2 id="list">プリセットの一覧を開く</h2>
+  <p>メイン画面の設定ボタン(歯車)を押すと、「プリセット」の画面が開きます。「ビルトイン」と「ユーザー設定」に分かれ、いちばん下に「使い方(マニュアル)」があります。「使い方(マニュアル)」を押すと、このマニュアルがブラウザで開きます。プリセットの行をタップすると、そのプリセットの設定画面が開きます。閉じるときは「完了」を押します。</p>
+  <figure>
+    <img src="assets/04-presets.png" alt="「プリセット」の画面。「ビルトイン」に régularisation・Adresse héritée・ruby héritée の 3 行、その下に「ユーザー設定」の見出しと右端の + ボタン、右上に「完了」" width="414" height="900">
+    <figcaption>プリセットの一覧</figcaption>
+  </figure>
+
+  <h2 id="alias">ビルトインに別名(alias)を付ける</h2>
+  <p>ビルトインのプリセットの設定画面では、「nom」の欄に本来の名前と「alias」の入力欄があります。alias を付けると、メイン画面のチップとそのメニューには alias が表示されます。プリセットの一覧では「régularisation - 正規化」のように、本来の名前の後ろに alias が付きます。</p>
+  <p>alias は、確定キーを押したとき、入力欄から離れたとき、画面を閉じたときに保存されます。空にするか、本来の名前と同じにすると、alias は消えます。</p>
+  <figure>
+    <img src="assets/05-editor.png" alt="régularisation の設定画面。「nom」に名前と「alias」の入力欄(例: 正規化)と説明文、その下に latin・espace・les kanas・symbole の各項目が灰色で表示されている" width="414" height="900">
+    <figcaption>ビルトインの設定画面(変換設定は灰色で、変更できない)</figcaption>
+  </figure>
+
+  <h2 id="new">新しく作る</h2>
+  <p>「プリセット」の画面で、「ユーザー設定」の見出しの右端にある + を押すと、「新しいプリセット」という名前のプリセットができ、設定画面が開きます。同じ名前がすでにあるときは「新しいプリセット 2」「新しいプリセット 3」…と番号が付きます。ビルトインに付けた alias と同じ名前も、使われている名前として番号を進めます。</p>
+  <p>新しいプリセットの変換設定は、すべて preserve から始まります。名前も変換設定も何も変えずに設定画面から戻ると、プリセットは追加されません(途中で変えても、元に戻してあれば追加されません)。</p>
+
+  <h2 id="edit">名前と変換設定を変える</h2>
+  <p>ユーザー設定のプリセットは、設定画面の「nom」で名前を、その下の各項目で変換設定を変えられます。変えた内容はその場で保存されます。名前を空にしたときは保存されず、前の名前のままです。</p>
+  <p>ほかのプリセットと同じ名前にすると、「同じ名前のプリセットがあります」と表示されます。保存はされます。ビルトインに alias を付けているときは、その alias とも比べます。</p>
+
+  <h2 id="duplicate">複製する</h2>
+  <p>「プリセット」の画面で行を左へスワイプして「複製」を押すか、行を長押しして「複製」を選ぶと、同じ変換設定のプリセットがユーザー設定に追加され、その設定画面が開きます。ビルトインのプリセットも複製できます。</p>
+  <p>複製の名前は「元の名前 copie」です。ビルトインを複製したときは、alias ではなく本来の名前を元にします。すでにあるときは「元の名前 copie 2」「元の名前 copie 3」…となります(ビルトインの alias と同じ名前も避けます)。「régularisation copie」を複製しても「régularisation copie copie」にはならず、「régularisation copie 2」のように番号が進みます。</p>
+  <p>左へ大きくスワイプしただけでは複製されません。ボタンを押したときだけ複製します。</p>
+
+  <h2 id="delete">削除する</h2>
+  <p>ユーザー設定のプリセットは、行を左へスワイプして「削除」を押すか、長押しして「削除」を選ぶと削除できます。選んでいるプリセットを削除すると、régularisation が選ばれます。ビルトインのプリセットは削除できません。</p>
+</main>
+<footer class="pager">
+  <a class="prev" href="basics.html">← 第2章 基本の使い方</a>
+  <a class="next" href="settings.html">第4章 設定リファレンス →</a>
+</footer>
+</body>
+</html>

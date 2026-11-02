@@ -1,0 +1,100 @@
+/* régu 操作マニュアル 共有スタイル
+   色と文字は docs/site.css に合わせる。見出しの章番号・note はアプリの朱(Theme.accent)を使う */
+:root {
+  color-scheme: light dark;
+  --fg: #1d1d1f;
+  --bg: #ffffff;
+  --muted: #6e6e73;
+  --link: #0066cc;
+  --line: color-mix(in srgb, var(--fg) 15%, transparent);
+  --card: #f6f4f0;
+  --accent: #ad2533;
+  --note-bg: #f6f4f0;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #f5f5f7;
+    --bg: #1c1c1e;
+    --muted: #a1a1a6;
+    --link: #4da3ff;
+    --card: #2a2a2c;
+    --accent: #f0707e;
+    --note-bg: #2a2a2c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 0 16px 48px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.8 -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+}
+main { max-width: 720px; margin: 0 auto; }
+a { color: var(--link); }
+/* ---------- ヘッダとページ送り ---------- */
+header.site {
+  max-width: 720px; margin: 0 auto; padding: 12px 0 8px;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .3em 1em;
+  border-bottom: 1px solid var(--line);
+}
+header.site .brand { font-weight: 600; color: var(--fg); text-decoration: none; }
+header.site .crumbs { font-size: .8rem; color: var(--muted); }
+header.site .crumbs a { text-decoration: none; }
+footer.pager {
+  max-width: 720px; margin: 48px auto 0; padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; gap: 1em;
+  font-size: .9rem;
+}
+footer.pager a { text-decoration: none; }
+footer.pager a:hover { text-decoration: underline; }
+footer.pager .spacer { flex: 1; }
+/* ---------- 見出し・本文 ---------- */
+h1 { font-size: 1.6em; line-height: 1.4; margin: 1.2em 0 .3em; }
+h1 .chapno {
+  display: block; font-size: .5em; font-weight: 600; color: var(--accent);
+  letter-spacing: .08em;
+}
+.lede { color: var(--muted); font-size: .95rem; margin: 0 0 2em; }
+h2 {
+  font-size: 1.15em; margin: 2.4em 0 .4em; padding-top: 1.2em;
+  border-top: 1px solid var(--line);
+}
+h3 { font-size: 1em; margin: 1.8em 0 .3em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em; }
+.note {
+  background: var(--note-bg); border-left: 3px solid var(--accent);
+  border-radius: 8px; padding: .8em 1em; font-size: .9rem; margin: 1.2em 0;
+}
+dt { font-weight: 600; }
+dd { margin: 0 0 1em; }
+/* ---------- 表 ---------- */
+.tablewrap { overflow-x: auto; }
+table.spec { border-collapse: collapse; font-size: .9rem; width: 100%; margin: 1em 0; }
+table.spec th, table.spec td {
+  border: 1px solid var(--line); padding: .4em .7em; text-align: left; vertical-align: top;
+}
+table.spec th { background: var(--card); font-weight: 600; white-space: nowrap; }
+/* ---------- 図 ---------- */
+figure { margin: 1.2em 0; text-align: center; }
+figure img {
+  display: block; width: 100%; max-width: 280px; height: auto; margin: 0 auto;
+  border: 1px solid var(--line); border-radius: 14px;
+}
+figcaption { font-size: .8rem; color: var(--muted); margin-top: .5em; }
+.shots {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px; margin: 1.2em 0; align-items: start;
+}
+.shots figure { margin: 0; }
+/* ---------- 目次 ---------- */
+ol.toc { list-style: none; padding: 0; margin: 1.5em 0; display: grid; gap: 10px; }
+ol.toc li a {
+  display: block; padding: .7em 1em; border: 1px solid var(--line); border-radius: 12px;
+  color: var(--fg); text-decoration: none;
+}
+ol.toc li a:hover { border-color: var(--accent); }
+ol.toc .no { font-size: .75rem; font-weight: 700; color: var(--accent); letter-spacing: .06em; }
+ol.toc .t { display: block; font-weight: 700; }
+ol.toc .d { display: block; font-size: .85rem; color: var(--muted); }
