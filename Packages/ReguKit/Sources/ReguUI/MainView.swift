@@ -4,8 +4,16 @@ import SwiftUI
 // 縦長: 上に入力カード(編集可) / 中にプリセット・変換・設定の行 / 下に結果カード(読み取り専用・選択可)。
 // 横長(画面の幅 > 高さ。機種では分けない): 左に入力カード / 中央にプリセット・変換・設定の列 / 右に結果カード
 public struct MainView: View {
-    // 「コピーしました」を出しておく時間
-    private static let badgeDuration: Duration = .seconds(1.5)
+    // 「コピーしました」を出しておく時間。UI テスト(reguUITests)用に、起動引数 -reguUITestBadgeSeconds <秒> で延ばせる
+    private static var badgeDuration: Duration {
+        #if DEBUG
+        let override = UserDefaults.standard.double(forKey: "reguUITestBadgeSeconds")
+        if override > 0 {
+            return .seconds(override)
+        }
+        #endif
+        return .seconds(1.5)
+    }
     // 見出しと本文の間。全選択したときの上側の選択ハンドルが見出しに掛からない幅
     private static let headerSpacing: CGFloat = 12
     // プリセットのチップ・設定ボタンの高さ(押せる大きさ 44pt)

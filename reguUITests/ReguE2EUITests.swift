@@ -192,39 +192,70 @@ final class ReguE2EUITests: XCTestCase {
     func testE11_CopiedBadgeAppearsOnceAndDisappears() throws {
         try requireIdiom(.phone)
         let app = XCUIApplication()
-        launchWithEmptyClipboard(app: app)
+        // 表示時間を 8 秒に延ばして起動し、時刻で判定する
+        launchWithEmptyClipboard(app: app, extraArguments: ["-reguUITestBadgeSeconds", "8"])
         let badge = element("copiedBadge", in: app)
         XCTAssertFalse(badge.exists, "コピーしていないのに「コピーしました」が出ている")
 
         replaceText(of: element("input", in: app), with: "ｶﾅ")
+        let firstTap = Date()
         app.buttons["convertButton"].tap()
         XCTAssertTrue(badge.waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
 
-        // 表示中に押し直す。数え直さなければ、1 度目の表示から 1.5 秒(2 度目の押下からはそれより短い時間)で消える。
-        // 1 度目の表示の時刻は検出の遅れで正確に取れないため、待たずに押し直し、2 度目の押下からの経過だけを見る
+        // 表示時間(8 秒)の半分が過ぎても残っていることを確かめてから押し直す。ここで消えていれば 2 度目の前に落ちる
+        Thread.sleep(forTimeInterval: max(0, firstTap.addingTimeInterval(4).timeIntervalSinceNow))
         XCTAssertTrue(badge.exists, "2 度目を押す前に「コピーしました」が消えた")
+        // 2 度目が押せないと「数え直されていない」と取り違えるので、押せることを先に確かめる
+        XCTAssertTrue(app.buttons["convertButton"].isHittable, "2 度目の変換ボタンが押せない")
         let secondTap = Date()
         app.buttons["convertButton"].tap()
         capture("E11-iphone-copied-badge")
         let badges = app.descendants(matching: .any).matching(identifier: "copiedBadge")
         XCTAssertEqual(badges.count, 1, "表示中にもう一度押すと「コピーしました」が増えた")
 
-        let gone = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: badge)
-        XCTAssertEqual(XCTWaiter.wait(for: [gone], timeout: 5), .completed, "「コピーしました」が消えない")
-        XCTAssertGreaterThanOrEqual(Date().timeIntervalSince(secondTap), 1.2, "再押下で表示時間が数え直されていない")
+        // 消えた時刻を 0.1 秒刻みで測る(XCTWaiter の待ち方は粗いため使わない)。上限は 2 度目の押下から 8 + 4 秒
+        let deadline = secondTap.addingTimeInterval(12)
+        var goneAt: Date?
+        while Date() < deadline {
+            if !badge.exists {
+                goneAt = Date()
+                break
+            }
+            Thread.sleep(forTimeInterval: 0.1)
+        }
+        let gone = try XCTUnwrap(goneAt, "「コピーしました」が消えない")
+        // 数え直さなければ、1 度目の表示(firstTap の 1 秒ほど後まで)から 8 秒とフェードで消え、2 度目の押下からは最大でも約 5.3 秒。
+        // 数え直せば 2 度目の押下から 8 秒以上。6.5 秒はその間にあり、どちらにも 1 秒以上の余裕がある
+        XCTAssertGreaterThanOrEqual(gone.timeIntervalSince(secondTap), 6.5, "再押下で表示時間が数え直されていない")
         XCTAssertEqual(readPasteboard(), "カナ")
     }
 
     // 表示中にホームへ出て戻ったら、残り時間に関係なく消えている
-    func testE14_CopiedBadgeIsHiddenAfterReturningFromHome() throws {
+    // 表示時間を延ばさない起動では、短い時間(既定 1.5 秒)で消える。消えるまでの上限だけを見る
+    func testE11b_CopiedBadgeDisappearsWithDefaultDuration() throws {
         try requireIdiom(.phone)
         let app = XCUIApplication()
         launchWithEmptyClipboard(app: app)
         replaceText(of: element("input", in: app), with: "ｶﾅ")
         app.buttons["convertButton"].tap()
+        let badge = element("copiedBadge", in: app)
+        XCTAssertTrue(badge.waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
+        XCTAssertTrue(badge.waitForNonExistence(timeout: 5), "「コピーしました」が 5 秒経っても消えない")
+    }
+
+    func testE14_CopiedBadgeIsHiddenAfterReturningFromHome() throws {
+        try requireIdiom(.phone)
+        let app = XCUIApplication()
+        // 既定の 1.5 秒ではホームへ行って戻る間に時間で消えてしまい、背面に回ったときに消す処理を確かめられない。
+        // 表示時間を 8 秒に延ばし、時間では消えないうちに戻る
+        launchWithEmptyClipboard(app: app, extraArguments: ["-reguUITestBadgeSeconds", "8"])
+        replaceText(of: element("input", in: app), with: "ｶﾅ")
+        let tap = Date()
+        app.buttons["convertButton"].tap()
         XCTAssertTrue(element("copiedBadge", in: app).waitForExistence(timeout: 2), "変換ボタンの直後に「コピーしました」が出ない")
 
         goHomeAndReturn(app: app)
+        XCTAssertLessThan(Date().timeIntervalSince(tap), 7, "戻るまでに時間が掛かり、表示時間で消えたのと区別できない")
 
         XCTAssertFalse(element("copiedBadge", in: app).exists, "ホームから戻った後も「コピーしました」が残っている")
         capture("E14-iphone-after-return")
