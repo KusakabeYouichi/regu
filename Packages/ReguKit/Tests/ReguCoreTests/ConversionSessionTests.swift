@@ -32,7 +32,7 @@ struct ConversionSessionTests {
         let session = ConversionSession(pasteboard: pasteboard, defaults: defaults)
         session.activate(from: .launch)
         session.input = "ｶﾅ"
-        session.convertTapped()
+        session.convertInput()
 
         session.activate(from: .background)
 
@@ -56,7 +56,7 @@ struct ConversionSessionTests {
         let session = ConversionSession(pasteboard: pasteboard, defaults: defaults)
         session.activate(from: .launch)
         session.input = "ｶﾅ"
-        session.convertTapped()
+        session.convertInput()
         session.select(Preset.rubyHeritee.id)
 
         session.enterBackground()
@@ -128,12 +128,12 @@ struct ConversionSessionTests {
     }
 
     @Test("T5 変換ボタンは手入力を変換し、全選択を求め、クリップボードへ書く")
-    func convertTappedConvertsInput() {
+    func convertInputConvertsInput() {
         let pasteboard = FakePasteboard()
         let session = ConversionSession(pasteboard: pasteboard, defaults: defaults)
         session.input = "ｶﾅ"
 
-        session.convertTapped()
+        session.convertInput()
 
         #expect(session.output == "カナ")
         #expect(session.selectAllToken == 1)
@@ -154,12 +154,12 @@ struct ConversionSessionTests {
     }
 
     @Test("T7 入力が空・空白だけなら変換ボタンは何もしない", arguments: ["", " \u{3000}\n"])
-    func convertTappedIgnoresBlankInput(input: String) {
+    func convertInputIgnoresBlankInput(input: String) {
         let pasteboard = FakePasteboard(content: "元の内容")
         let session = ConversionSession(pasteboard: pasteboard, defaults: defaults)
         session.input = input
 
-        session.convertTapped()
+        session.convertInput()
 
         #expect(session.output == "")
         #expect(session.selectAllToken == 0)

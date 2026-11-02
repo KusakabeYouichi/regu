@@ -302,7 +302,7 @@ struct PresetStoreTests {
         let session = ConversionSession(pasteboard: pasteboard, defaults: defaults)
         session.activate(from: .launch)
         session.input = "ｶﾅ　ＡＢ"
-        session.convertTapped()
+        session.convertInput()
 
         session.store.setAlias("正規化", for: Preset.regularisation.id)
         session.activate(from: .background)

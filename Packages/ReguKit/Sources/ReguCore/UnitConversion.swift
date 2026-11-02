@@ -18,7 +18,7 @@ enum UnitConversion {
         ("㏛", "sr"), ("㏜", "Sv"), ("㏝", "Wb"), ("㎭", "rad"), ("㏆", "C/kg")
     ]
 
-    private static let ligatureToSI: [Unicode.Scalar: String] = {
+    private static let siByLigature: [Unicode.Scalar: String] = {
         Dictionary(uniqueKeysWithValues: table.map { ($0.ligature, $0.si) })
     }()
 
@@ -43,7 +43,7 @@ enum UnitConversion {
         case .ligatureToSI:
             var result = String.UnicodeScalarView()
             for scalar in text.unicodeScalars {
-                if let si = ligatureToSI[scalar] {
+                if let si = siByLigature[scalar] {
                     result.append(contentsOf: si.unicodeScalars)
                 } else {
                     result.append(scalar)

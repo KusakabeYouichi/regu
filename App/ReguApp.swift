@@ -22,12 +22,12 @@ struct ReguApp: App {
             MainView(session: session)
         }
         .onChange(of: scenePhase, initial: true) { _, newPhase in
-            handle(newPhase)
+            handleScenePhase(newPhase)
         }
     }
 
     // background → active は必ず inactive を経由するので、直前の値ではなく background を通ったかで見分ける
-    private func handle(_ phase: ScenePhase) {
+    private func handleScenePhase(_ phase: ScenePhase) {
         switch phase {
         case .background:
             wasInBackground = true

@@ -116,7 +116,7 @@ public enum Converter {
         }
     }
 
-    static func isASCIIAlphanumeric(_ scalar: Unicode.Scalar) -> Bool {
+    private static func isASCIIAlphanumeric(_ scalar: Unicode.Scalar) -> Bool {
         switch scalar.value {
         case 0x30...0x39, 0x41...0x5A, 0x61...0x7A: true
         default: false

@@ -132,7 +132,7 @@ public final class PresetStore {
         }
     }
 
-    // ビルトインのプリセットは変更できない(以下 3 つとも userPresets だけを対象にする)
+    // ビルトインのプリセットは変更できない(以下はいずれも userPresets だけを対象にする)
     public func rename(_ id: UUID, to name: String) {
         guard let index = userPresets.firstIndex(where: { $0.id == id }) else {
             return

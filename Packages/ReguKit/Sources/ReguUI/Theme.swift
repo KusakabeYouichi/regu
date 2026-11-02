@@ -7,8 +7,7 @@ enum Theme {
     static let paper = Color(platformColor: dynamic(light: 0xF6F4F0, dark: 0x121212))
     static let card = Color(platformColor: dynamic(light: 0xFFFFFF, dark: 0x1E1E1E))
     static let tileFace = Color(platformColor: dynamic(light: 0xFFFFFF, dark: 0xE8E6E2))
-    static let accentPlatformColor = dynamic(light: 0xAD2533, dark: 0xF0707E)
-    static let accent = Color(platformColor: accentPlatformColor)
+    static let accent = Color(platformColor: dynamic(light: 0xAD2533, dark: 0xF0707E))
     // 結果欄の選択の地(生成り)。面が大きいので朱にせず、紙の色に寄せる。カードの上で #EAE0CF / #554C3F
     static let selectionPlatformColor = dynamic(light: 0xEAE0CF, dark: 0x554C3F)
     // iOS の結果欄の tintColor(ハンドル・カーソルの色)。iOS は選択の地をこの色にライト約 20%・ダーク約 35% の

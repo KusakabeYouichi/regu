@@ -83,7 +83,7 @@ public final class ConversionSession {
     }
 
     // 空白だけの入力では何もしない(クリップボードも書かない)
-    public func convertTapped() {
+    public func convertInput() {
         guard !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
         }
@@ -91,12 +91,13 @@ public final class ConversionSession {
     }
 
     private func convertAndCopy() {
-        output = Converter.convert(input, settings: store.selectedPreset.settings)
+        let settings = store.selectedPreset.settings
+        output = Converter.convert(input, settings: settings)
         selectAllToken += 1
         pasteboard.setString(output)
         defaults.set(pasteboard.changeCount, forKey: Key.lastWrittenChangeCount)
         hasUnconfirmedWrite = true
-        defaults.set(Self.digest(of: output, settings: store.selectedPreset.settings), forKey: Key.lastWrittenDigest)
+        defaults.set(Self.digest(of: output, settings: settings), forKey: Key.lastWrittenDigest)
     }
 
     // 文字列そのものは保存せず、設定と文字列を合わせた FNV-1a 64 の指紋だけを残す

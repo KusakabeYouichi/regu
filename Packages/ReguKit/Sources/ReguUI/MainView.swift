@@ -8,6 +8,8 @@ public struct MainView: View {
     private static let badgeDuration: Duration = .seconds(1.5)
     // 見出しと本文の間。全選択したときの上側の選択ハンドルが見出しに掛からない幅
     private static let headerSpacing: CGFloat = 12
+    // プリセットのチップ・設定ボタンの高さ(押せる大きさ 44pt)
+    private static let controlHeight: CGFloat = 44
     // 横長のときの中央の列の幅
     private static let controlColumnWidth: CGFloat = 150
     // 画面に出ているキーボードの高さがこれを超えたら、キーボードが出ているとみなす
@@ -123,7 +125,7 @@ public struct MainView: View {
                 .accessibilityIdentifier("output")
         }
         .padding(12)
-        .frame(minHeight: isLandscape ? 56 : (isInputFocused ? 56 : 120), maxHeight: .infinity)
+        .frame(minHeight: isLandscape || isInputFocused ? 56 : 120, maxHeight: .infinity)
         .modifier(CardBackground())
         // 見出しに重ならないよう、右下の角に出す
         .overlay(alignment: .bottomTrailing) {
@@ -149,10 +151,10 @@ public struct MainView: View {
     // (チップの名前は入りきらなければ 0.7 倍まで縮め、それでも入らなければ末尾を省略する)
     private var controlRow: some View {
         HStack(spacing: 12) {
-            presetChip(height: 44)
+            presetChip()
                 .frame(maxWidth: .infinity, alignment: .leading)
             convertButton(tileSize: TileConvertButton.regularTileSize, showsCaption: true)
-            settingsButton(size: 44)
+            settingsButton()
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
@@ -166,14 +168,14 @@ public struct MainView: View {
     private var controlColumn: some View {
         let isCompact = keyboardHeight > Self.keyboardMinHeight
         return VStack(spacing: isCompact ? 4 : 12) {
-            presetChip(height: 44)
+            presetChip()
             Spacer(minLength: 0)
             convertButton(
                 tileSize: isCompact ? TileConvertButton.compactTileSize : TileConvertButton.regularTileSize,
                 showsCaption: !isCompact
             )
             Spacer(minLength: 0)
-            settingsButton(size: 44)
+            settingsButton()
         }
         .frame(width: Self.controlColumnWidth)
         .frame(maxHeight: .infinity)
@@ -182,12 +184,12 @@ public struct MainView: View {
 
     private func convertButton(tileSize: CGFloat, showsCaption: Bool) -> some View {
         TileConvertButton(tileSize: tileSize, showsCaption: showsCaption) {
-            session.convertTapped()
+            session.convertInput()
         }
         .accessibilityIdentifier("convertButton")
     }
 
-    private func presetChip(height: CGFloat) -> some View {
+    private func presetChip() -> some View {
         Menu {
             Picker("プリセット", selection: presetSelection) {
                 Section {
@@ -216,7 +218,7 @@ public struct MainView: View {
             .font(.subheadline.weight(.medium))
             .foregroundStyle(Theme.accent)
             .padding(.horizontal, 12)
-            .frame(minHeight: height)
+            .frame(minHeight: Self.controlHeight)
             .modifier(CapsuleBackground())
         }
         .menuOrder(.fixed)
@@ -225,14 +227,14 @@ public struct MainView: View {
         .accessibilityIdentifier("presetPicker")
     }
 
-    private func settingsButton(size: CGFloat) -> some View {
+    private func settingsButton() -> some View {
         Button {
             isShowingPresets = true
         } label: {
             Image(systemName: "gearshape")
                 .font(.body.weight(.medium))
                 .foregroundStyle(Color.secondary)
-                .frame(width: size, height: size)
+                .frame(width: Self.controlHeight, height: Self.controlHeight)
                 .modifier(CapsuleBackground())
         }
         .accessibilityLabel("プリセットの設定")
