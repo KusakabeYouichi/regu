@@ -50,7 +50,7 @@ régu(レギュ)は、コピーした文字列を、あらかじめ決めた規�
 ・記号 — 全角 ⇄ ASCII、Windows の文字コード(CP932)に合わせた変換
 ・鉤括弧 — 「」⇄『』
 ・単位 — kg や cm を 1 文字にまとめた組文字 ⇄ kg cm m² などの表記
-・HTML エンティティ — &eacute; ⇄ é
+・HTML エンティティ — &eacute; を é に(逆向きは & や引用符など 5 つの記号だけを &amp; などに)
 ・URL エンティティ — %C3%A9 ⇄ é
 
 ■ 3 つの既定のプリセット
@@ -105,7 +105,7 @@ Copiez un texte, puis ouvrez régu. À chaque passage au premier plan, régu lit
 • Symboles — pleine chasse ⇄ ASCII, ou selon le jeu de caractères Windows (CP932)
 • Crochets japonais — 「」⇄『』
 • Unités — symboles d’unités SI en un seul caractère ⇄ kg, cm, m², etc.
-• Entités HTML — &eacute; ⇄ é
+• Entités HTML — &eacute; en é (dans l’autre sens, seulement & et quatre autres signes, en &amp;, etc.)
 • Encodage URL — %C3%A9 ⇄ é
 
 ■ Trois préréglages fournis
